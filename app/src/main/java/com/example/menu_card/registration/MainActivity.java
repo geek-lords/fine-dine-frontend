@@ -1,9 +1,13 @@
-package com.example.menu_card;
+package com.example.menu_card.registration;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.example.menu_card.R;
+import com.example.menu_card.registration.BottomSheetSignIn;
+import com.example.menu_card.registration.BottomSheetSignUp;
 
 public class MainActivity extends AppCompatActivity {
 

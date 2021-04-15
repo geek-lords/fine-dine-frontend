@@ -1,4 +1,4 @@
-package com.example.menu_card;
+package com.example.menu_card.registration;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.menu_card.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomSheetSignIn extends BottomSheetDialogFragment {
