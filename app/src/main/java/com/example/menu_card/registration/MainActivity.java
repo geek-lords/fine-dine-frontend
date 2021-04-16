@@ -2,8 +2,11 @@ package com.example.menu_card.registration;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.menu_card.R;
 import com.example.menu_card.registration.BottomSheetSignIn;
@@ -12,6 +15,7 @@ import com.example.menu_card.registration.BottomSheetSignUp;
 public class MainActivity extends AppCompatActivity {
 
     Button button;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             BottomSheetSignIn sign_in =  new BottomSheetSignIn();
             sign_in.show(getSupportFragmentManager(),"TAG");
         });
+
 
     }
 }
