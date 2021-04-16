@@ -18,7 +18,7 @@ public class SplashScreen extends AppCompatActivity {
 
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
-        int SPLASH_DISPLAY_LENGTH = 2000;
+        int SPLASH_DISPLAY_LENGTH = 2450;
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
