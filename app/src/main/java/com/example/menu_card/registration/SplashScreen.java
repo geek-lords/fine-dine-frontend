@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.example.menu_card.R;
+import com.example.menu_card.home.Activity_homepage;
 
 import java.io.BufferedReader;
 import java.io.File;

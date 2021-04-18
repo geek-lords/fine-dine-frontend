@@ -97,7 +97,7 @@
 
 
     <Button
-        android:id="@+id/confirm_button"
+        android:id="@+id/confirm_button_signin"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="35dp"

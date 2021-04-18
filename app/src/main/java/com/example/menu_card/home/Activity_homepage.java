@@ -1,5 +1,6 @@
-package com.example.menu_card.registration;
+package com.example.menu_card.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ public class Activity_homepage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Scan Activity Goes Here
+                Intent intent = new Intent(Activity_homepage.this, Scanner.class);
+                startActivity(intent);
             }
         });
 

@@ -1,10 +1,8 @@
 package com.example.menu_card.registration;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.menu_card.R;
+import com.example.menu_card.home.Activity_homepage;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.json.JSONException;
@@ -45,7 +43,8 @@ import java.util.regex.Pattern;
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class BottomSheetSignIn extends BottomSheetDialogFragment {
-    TextView sign_up_btn, sign_in_btn;
+    TextView sign_up_btn;
+    Button sign_in_btn;
     static boolean isVisible = false;
     static boolean isSubmit = false;
     ProgressBar progressBar;
@@ -66,13 +65,12 @@ public class BottomSheetSignIn extends BottomSheetDialogFragment {
 
         this.progressBar = view.findViewById(R.id.progressBar_signin);
 
-        sign_in_btn = view.findViewById(R.id.logo_sign_in);
+        sign_in_btn = view.findViewById(R.id.confirm_button_signin);
         sign_in_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!isSubmit){
                     isSubmit = true;
-                    progressBar.setVisibility(View.VISIBLE);
 
                     EditText email_et = view.findViewById(R.id.email_sign_in);
                     String  email = email_et.getText().toString();
@@ -91,6 +89,7 @@ public class BottomSheetSignIn extends BottomSheetDialogFragment {
                         return;
                     }
 
+                    progressBar.setVisibility(View.VISIBLE);
                     // Sign user in through api
                     String url = BASE_URL+"/authenticate";
 

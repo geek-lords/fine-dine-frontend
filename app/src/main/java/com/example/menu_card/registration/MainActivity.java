@@ -3,17 +3,13 @@ package com.example.menu_card.registration;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.menu_card.R;
-import com.example.menu_card.registration.BottomSheetSignIn;
-import com.example.menu_card.registration.BottomSheetSignUp;
+import com.example.menu_card.home.Activity_homepage;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         go_to_homepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),Activity_homepage.class);
+                Intent intent = new Intent(getApplicationContext(), Activity_homepage.class);
                 startActivity(intent);
             }
         });

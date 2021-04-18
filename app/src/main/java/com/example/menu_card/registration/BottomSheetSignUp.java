@@ -1,6 +1,5 @@
 package com.example.menu_card.registration;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,9 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.menu_card.R;
+import com.example.menu_card.home.Activity_homepage;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.json.JSONException;
@@ -44,7 +43,8 @@ import java.util.regex.Pattern;
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class BottomSheetSignUp extends BottomSheetDialogFragment {
-    TextView sign_up_btn, sign_in_btn;
+    Button sign_up_btn;
+    TextView sign_in_btn;
     static boolean isVisible = false;
     static boolean isSubmit = false;
     ProgressBar progressBar;
@@ -57,7 +57,7 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.sign_up,container,false);
 
-        sign_up_btn = view.findViewById(R.id.logo_sign_up);
+        sign_up_btn = view.findViewById(R.id.confirm_button_signup);
         this.progressBar = (ProgressBar) view.findViewById(R.id.progressBar_signup);
 
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +65,7 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if(!isSubmit){
                     isSubmit = true;
-                    progressBar.setVisibility(View.VISIBLE);
+
                     EditText email_tv = view.findViewById(R.id.email_sign_up);
                     String email = email_tv.getText().toString();
 
@@ -86,6 +86,7 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
                         return;
                     }
 
+                    progressBar.setVisibility(View.VISIBLE);
                     // Create user through api
                     String url = BASE_URL+"/create_user";
 

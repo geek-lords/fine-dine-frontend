@@ -102,7 +102,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/confirm_button"
+        android:id="@+id/confirm_button_signup"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="27dp"
