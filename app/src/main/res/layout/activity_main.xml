@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#070707"
-    tools:context=".registration.MainActivity" >
+    tools:context=".registration.MainActivity">
 
     <Button
         android:id="@+id/sign_in_button"
@@ -83,7 +83,7 @@
         android:layout_height="154dp"
         android:layout_marginTop="35dp"
         android:fontFamily="@font/poppins"
-        android:text="Contactless,\nseamless dine-in experience"
+        android:text="Seamless dine-in experience"
         android:textAlignment="center"
         android:textColor="#8F8F8F"
         android:textSize="30sp"

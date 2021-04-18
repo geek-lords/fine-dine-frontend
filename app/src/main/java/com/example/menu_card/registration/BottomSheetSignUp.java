@@ -2,12 +2,14 @@ package com.example.menu_card.registration;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,10 @@ import androidx.annotation.Nullable;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.menu_card.R;
@@ -41,7 +47,7 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
     TextView sign_up_btn, sign_in_btn;
     static boolean isVisible = false;
     static boolean isSubmit = false;
-
+    ProgressBar progressBar;
 
     public BottomSheetSignUp() {
     }
@@ -52,12 +58,14 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
         View view= inflater.inflate(R.layout.sign_up,container,false);
 
         sign_up_btn = view.findViewById(R.id.logo_sign_up);
+        this.progressBar = (ProgressBar) view.findViewById(R.id.progressBar_signup);
+
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!isSubmit){
                     isSubmit = true;
-
+                    progressBar.setVisibility(View.VISIBLE);
                     EditText email_tv = view.findViewById(R.id.email_sign_up);
                     String email = email_tv.getText().toString();
 
@@ -69,45 +77,72 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
 
                     if(name.trim().equals("") || email.trim().equals("") || password.trim().equals("")){
                         Toast.makeText(getActivity(), "Credentials can't be empty", Toast.LENGTH_SHORT).show();
+                        isSubmit = false;
                         return;
                     }
                     if(!isEmailValid(email)){
                         Toast.makeText(getActivity(), "Email is invalid", Toast.LENGTH_SHORT).show();
+                        isSubmit = false;
                         return;
                     }
 
                     // Create user through api
                     String url = BASE_URL+"/create_user";
 
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                            response -> {
-                                try {
-                                    Toast.makeText(getActivity(), response, Toast.LENGTH_SHORT).show();
-                                    JSONObject jsonObject = new JSONObject(response);
+                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("name",name);
+                        jsonObject.put("email",email);
+                        jsonObject.put("password",password);
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                            Request.Method.POST,url, jsonObject,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    if(response.has("error")) {
+                                        try {
+                                            Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_SHORT).show();
+                                            isSubmit = false;
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }else{
+                                        try {
+                                            saveTextToFile(getActivity(), "jwt_token", response.getString("jwt_token"));
+                                            Intent mainIntent = new Intent(getActivity(), Activity_homepage.class);
+                                            startActivity(mainIntent);
+                                            getActivity().finish();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
                                 }
-                            },
-                            error -> {
-                                new AlertDialog.Builder(getActivity())
-                                        .setTitle("Error")
-                                        .setMessage(error.getMessage())
-                                        .setCancelable(false)
-                                        .setPositiveButton("OK", (dialog, which) -> {}).show();
-                            }){
+                            }, new Response.ErrorListener() {
 
                         @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map <String, String> params = new HashMap<>();
-                            params.put("name",name);
-                            params.put("password",password);
-                            params.put("email",email);
-                            return  params;
+                        public void onErrorResponse(VolleyError error) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            VolleyLog.d("Error: " + error.getMessage());
+                        }
+                    }) {
+                        //Passing some request headers
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            HashMap<String, String> headers = new HashMap<String, String>();
+                            headers.put("Content-Type", "application/json; charset=utf-8");
+                            return headers;
                         }
                     };
-                    RequestQueue requestQueue = Volley.newRequestQueue(Objects.requireNonNull(getActivity()));
-                    requestQueue.add(stringRequest);
+                    requestQueue.add(jsonObjReq);
+
+
                 }
             }
         });
