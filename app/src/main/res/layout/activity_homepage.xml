@@ -38,32 +38,32 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="right"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
         app:srcCompat="@drawable/ic_avatar" />
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         app:srcCompat="@drawable/ic_logo"
         android:layout_gravity="left"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="15dp"/>
 
     <TextView
         android:id="@+id/app_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="65dp"
         android:fontFamily="@font/aquire"
         android:text="FINE\nDINE"
         android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_anchor="@id/imageView5"
-        android:layout_marginStart="80dp"/>
+        android:textSize="25sp"
+        app:layout_anchor="@id/imageView5" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

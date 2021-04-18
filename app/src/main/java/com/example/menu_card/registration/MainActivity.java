@@ -2,10 +2,13 @@ package com.example.menu_card.registration;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.menu_card.R;
@@ -34,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
             sign_in.show(getSupportFragmentManager(),"TAG");
         });
 
+        //Temp Method for testing homepage (delete it later on)
+
+        ImageView go_to_homepage = (ImageView)findViewById(R.id.imageView2);
+        go_to_homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),Activity_homepage.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }
