@@ -5,12 +5,13 @@
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.Scanner">
+    tools:context=".home.Scanner"
+    android:background="#60000000">
 
     <com.budiyev.android.codescanner.CodeScannerView
         android:id="@+id/scanner_view"
         android:layout_width="409dp"
-        android:layout_height="644dp"
+        android:layout_height="704dp"
         android:focusableInTouchMode="true"
         app:autoFocusButtonColor="@color/white"
         app:autoFocusButtonVisible="true"
@@ -26,13 +27,12 @@
         android:id="@+id/tv_textView"
         android:layout_width="wrap_content"
         android:layout_height="25sp"
-        android:layout_marginBottom="60dp"
-        android:text="Scan something"
+        android:text="Scan QR Code"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
