@@ -2,7 +2,6 @@
  <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -13,7 +12,7 @@
         android:id="@+id/bottomappbar"
         app:fabCradleMargin="10dp"
         app:fabCradleRoundedCornerRadius="30dp"
-        app:backgroundTint="#673AB7"
+        app:backgroundTint="#000000"
         android:layout_gravity="bottom">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,6 +22,7 @@
             app:itemIconTint="@drawable/menu_selector"
             app:menu="@menu/nav_menu"
             app:elevation="0dp"
+            app:itemTextColor="@color/white"
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"/>
 
