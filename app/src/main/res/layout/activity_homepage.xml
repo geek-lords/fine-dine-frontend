@@ -24,7 +24,8 @@
             app:elevation="0dp"
             app:itemTextColor="@color/white"
             android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:elevation="4dp"/>
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -65,5 +66,15 @@
         android:textColor="@color/black"
         android:textSize="25sp"
         app:layout_anchor="@id/imageView5" />
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="55dp"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/home_nav" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

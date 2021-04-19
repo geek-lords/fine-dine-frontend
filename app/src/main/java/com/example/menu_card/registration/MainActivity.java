@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Temp Method for testing homepage (delete it later on)
-
         ImageView go_to_homepage = (ImageView)findViewById(R.id.imageView2);
         go_to_homepage.setOnClickListener(new View.OnClickListener() {
             @Override

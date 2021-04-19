@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/search"
+    <item android:id="@+id/fragment_browse"
         android:title="Search"
         android:icon="@drawable/ic_search" />
 
-    <item android:id="@+id/placeholder"
+    <item android:id="@+id/fragment_homepage"
         android:title=""
         android:enabled="false"/>
 
-    <item android:id="@+id/account"
+    <item android:id="@+id/fragment_account"
         android:title="Account"
         android:icon="@drawable/ic_person"/>
 </menu>
