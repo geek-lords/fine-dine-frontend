@@ -6,17 +6,17 @@
     app:startDestination="@id/fragment_homepage">
     <fragment
         android:id="@+id/fragment_homepage"
-        android:name="com.example.menu_card.fragment_homepage"
+        android:name="com.example.menu_card.fragments.fragment_homepage"
         android:label="initial_fragment"
         tools:layout="@layout/initial_fragment" />
     <fragment
         android:id="@+id/fragment_account"
-        android:name="com.example.menu_card.fragment_account"
+        android:name="com.example.menu_card.fragments.fragment_account"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/fragment_browse"
-        android:name="com.example.menu_card.fragment_browse"
+        android:name="com.example.menu_card.fragments.fragment_browse"
         android:label="fragment_browse"
-        tools:layout="@layout/fragment_browse" />
+        tools:layout="@layout/fragment_order" />
 </navigation>
