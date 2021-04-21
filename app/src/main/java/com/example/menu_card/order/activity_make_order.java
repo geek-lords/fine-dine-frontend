@@ -2,6 +2,7 @@ package com.example.menu_card.order;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -26,6 +27,8 @@ public class activity_make_order extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_order);
+
+        LinearLayout linearLayout = findViewById(R.id.linear_layout_menu);
 
         String menu = getIntent().getStringExtra("menu");
         try {
