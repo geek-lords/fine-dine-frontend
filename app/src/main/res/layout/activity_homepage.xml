@@ -39,7 +39,7 @@
         app:layout_anchor="@id/bottomappbar" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/profile"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="right"
@@ -70,7 +70,7 @@
 
 
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="55dp"
@@ -87,7 +87,7 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/home_nav" />
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
     <View

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,5 +38,20 @@ public class Activity_homepage extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavview);
         NavController navController = Navigation.findNavController(this,R.id.fragment);
         NavigationUI.setupWithNavController(bottomNavigationView,navController);
+
+        //For Testing purposes
+        ImageView img = (ImageView)findViewById(R.id.profile);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start_make_order();
+            }
+
+            private void start_make_order() {
+                Intent intent = new Intent(getApplicationContext(), activity_make_order.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
