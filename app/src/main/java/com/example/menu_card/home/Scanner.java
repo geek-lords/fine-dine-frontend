@@ -2,22 +2,38 @@ package com.example.menu_card.home;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.example.menu_card.R;
 import com.google.zxing.Result;
 
+import static com.example.menu_card.registration.MainActivity.BASE_URL;
+
 public class Scanner extends AppCompatActivity {
+
+    public interface VolleyCallback{
+        void onSuccess(String result);
+    }
+
     private CodeScanner mCodeScanner;
 
     private static final int MY_CAMERA_REQUEST_CODE = 100;
@@ -36,7 +52,20 @@ public class Scanner extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(Scanner.this, result.getText(), Toast.LENGTH_SHORT).show();
+                        // Sample restaurant_id and table no
+                        String restaurant_id = "1";
+                        String table_no = "1";
+                        Toast.makeText(Scanner.this, "Sample data:\nrestaurant_id = 1\ntable_no = 1", Toast.LENGTH_SHORT).show();
+
+                        getMenu(restaurant_id, new VolleyCallback() {
+                            @Override
+                            public void onSuccess(String result) {
+                                Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
+                                intent.putExtra("menu", result);
+                                startActivity(intent);
+                            }
+                        });
+
                     }
                 });
             }
@@ -52,6 +81,48 @@ public class Scanner extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         }else mCodeScanner.startPreview();
     }
+
+    private void getMenu(String restaurant_id, final VolleyCallback callback) {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = BASE_URL+"/menu?restaurant_id="+restaurant_id;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        new AlertDialog.Builder(Scanner.this)
+                                .setTitle("Got response")
+                                .setCancelable(true)
+                                .setMessage(response)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        callback.onSuccess(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                new AlertDialog.Builder(Scanner.this)
+                        .setTitle("Error")
+                        .setCancelable(true)
+                        .setMessage("Couldn't fetch menu.\n"+error.toString())
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
