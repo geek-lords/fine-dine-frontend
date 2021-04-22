@@ -2,7 +2,10 @@ package com.example.menu_card.order;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +23,7 @@ import com.example.menu_card.home.Scanner;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class activity_make_order extends AppCompatActivity {
 
@@ -50,7 +54,4 @@ public class activity_make_order extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
-
 }

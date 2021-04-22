@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <activity android:name=".home.Scanner"></activity>
-        <activity android:name=".home.activity_make_order"></activity>
+        <activity android:name=".order.activity_make_order"></activity>
         <activity android:name=".registration.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

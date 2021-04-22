@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import com.example.menu_card.order.*;
 
 import com.example.menu_card.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
