@@ -80,19 +80,7 @@ public class Scanner extends AppCompatActivity {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         }else {
-            //mCodeScanner.startPreview();
-            String restaurant_id = "1";
-            String table_no = "1";
-            Toast.makeText(Scanner.this, "Sample data:\nrestaurant_id = 1\ntable_no = 1", Toast.LENGTH_SHORT).show();
-
-            getMenu(restaurant_id, new VolleyCallback() {
-                @Override
-                public void onSuccess(String result) {
-                    Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
-                    intent.putExtra("menu", result);
-                    startActivity(intent);
-                }
-            });
+            mCodeScanner.startPreview();
         }
     }
 
@@ -106,16 +94,6 @@ public class Scanner extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        new AlertDialog.Builder(Scanner.this)
-                                .setTitle("Got response")
-                                .setCancelable(true)
-                                .setMessage(response)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
                         callback.onSuccess(response);
                     }
                 }, new Response.ErrorListener() {
@@ -130,7 +108,7 @@ public class Scanner extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
-                        });
+                        }).show();
             }
         });
         // Add the request to the RequestQueue.

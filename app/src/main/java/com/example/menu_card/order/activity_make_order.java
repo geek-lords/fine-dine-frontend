@@ -37,6 +37,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.menu_card.R;
 import com.example.menu_card.home.Scanner;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
@@ -54,8 +55,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class activity_make_order extends AppCompatActivity {
+
+    private boolean confirmOrder = false, checkOutOrder = false;
+    MaterialButton confirm;
+    MaterialButton checkout;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
@@ -64,11 +72,20 @@ public class activity_make_order extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_order);
 
+
+         confirm = findViewById(R.id.confirm);
+         checkout = findViewById(R.id.checkout);
+
         LinearLayout linearLayout = findViewById(R.id.linear_layout_menu);
         linearLayout.setElevation(dpToPixel(10));
 
         String menu = getIntent().getStringExtra("menu");
+
+        //Creating HashMap for keeping record of the items and their quantity
+        HashMap<String,String> hashMap = new HashMap<>();
+
         try {
+
             JSONObject jsonObject = new JSONObject(menu);
             JSONArray jsonArray = jsonObject.getJSONArray("menu");
 
@@ -79,6 +96,9 @@ public class activity_make_order extends AppCompatActivity {
                 String description = obj.getString("description");
                 String photo_url = obj.getString("photo_url");
                 String price = String.valueOf((int)Double.parseDouble(obj.getString("price")));
+
+                // Initializing this item id as 0 quantity by default
+                hashMap.put(id, "0");
 
                 MaterialCardView cardView = new MaterialCardView(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -169,7 +189,7 @@ public class activity_make_order extends AppCompatActivity {
                 materialTextView3.setTextSize(25);
                 materialTextView3.setTextColor(Color.BLACK);
                 params3.gravity = Gravity.RIGHT;
-                params3.leftMargin = dpToPixel(250);
+                params3.leftMargin = dpToPixel(235);
                 params3.topMargin = dpToPixel(105);
                 Typeface typeface3 = ResourcesCompat.getFont(this, R.font.poppins_medium);
                 materialTextView3.setTypeface(typeface3,Typeface.BOLD);
@@ -181,13 +201,14 @@ public class activity_make_order extends AppCompatActivity {
                 //Display the quantity
                 MaterialTextView materialTextView4 = new MaterialTextView(this);
                 materialTextView4.setText("0");
+                materialTextView4.setTag("quantity_"+id);
                 LinearLayout.LayoutParams params4= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 materialTextView4.setTextColor(Color.BLACK);
                 materialTextView4.setGravity(View.TEXT_ALIGNMENT_CENTER);
                 materialTextView4.setTextSize(30);
                 materialTextView4.setTextColor(Color.BLACK);
                 params4.gravity = Gravity.CENTER;
-                params4.leftMargin = dpToPixel(285);
+                params4.leftMargin = dpToPixel(265);
                 params4.topMargin = dpToPixel(100);
                 Typeface typeface4 = ResourcesCompat.getFont(this, R.font.poppins_medium);
                 materialTextView4.setTypeface(typeface4,Typeface.BOLD);
@@ -205,7 +226,7 @@ public class activity_make_order extends AppCompatActivity {
                 materialTextView5.setTextSize(25);
                 materialTextView5.setTextColor(Color.BLACK);
                 params5.gravity = Gravity.RIGHT;
-                params5.leftMargin = dpToPixel(320);
+                params5.leftMargin = dpToPixel(295);
                 params5.topMargin = dpToPixel(105);
                 Typeface typeface5 = ResourcesCompat.getFont(this, R.font.poppins_medium);
                 materialTextView5.setTypeface(typeface5,Typeface.BOLD);
@@ -223,6 +244,8 @@ public class activity_make_order extends AppCompatActivity {
                         if(quantity > 0) quantity--;
                         String new_quantity = String.valueOf(quantity);
                         materialTextView4.setText(new_quantity);
+                        //Update the HashMap
+                        hashMap.put(cardView.getTag().toString(), new_quantity);
                     }
                 });
                 materialTextView5.setOnClickListener(new View.OnClickListener() {
@@ -233,6 +256,8 @@ public class activity_make_order extends AppCompatActivity {
                         if(quantity < 10) quantity++;
                         String new_quantity = String.valueOf(quantity);
                         materialTextView4.setText(new_quantity);
+                        //Update the HashMap
+                        hashMap.put(cardView.getTag().toString(), new_quantity);
                     }
                 });
                 linearLayout.addView(cardView);
@@ -241,6 +266,44 @@ public class activity_make_order extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // Set up onclick listener for confirm order
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!confirmOrder) {
+                        Iterator it = hashMap.entrySet().iterator();
+                        String list = "";
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            String key = String.valueOf(pair.getKey());
+                            list+=("item_id:"+key + ", Quantity:" + pair.getValue()+"\n");
+                            MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                            materialTextView.setText("0");
+                            it.remove(); // avoids a ConcurrentModificationException
+                        }
+                        new AlertDialog.Builder(activity_make_order.this)
+                                .setTitle("Ordered items")
+                                .setCancelable(true)
+                                .setMessage(list)
+                                .setPositiveButton("OK", (dialog, which) -> {}).show();
+                        //confirmOrder = true;
+                    }
+                }
+            });
+
+        // Set up onclick listener for checkout
+            checkout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!checkOutOrder){
+                        Toast.makeText(activity_make_order.this, "Checkout", Toast.LENGTH_SHORT).show();
+                        checkOutOrder = true;
+                    }
+                }
+            });
+
+
     }
     public int dpToPixel(float dp) {
         float density = this.getResources().getDisplayMetrics().density;
