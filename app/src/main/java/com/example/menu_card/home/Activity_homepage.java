@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,12 +46,8 @@ public class Activity_homepage extends AppCompatActivity {
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start_make_order();
-            }
-
-            private void start_make_order() {
-                Intent intent = new Intent(getApplicationContext(), activity_make_order.class);
-                startActivity(intent);
+                // Show Profile
+                Toast.makeText(Activity_homepage.this, "Profile", Toast.LENGTH_SHORT).show();
             }
         });
 
