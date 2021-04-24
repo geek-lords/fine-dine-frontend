@@ -14,9 +14,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -80,7 +86,19 @@ public class Scanner extends AppCompatActivity {
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         }else {
-            mCodeScanner.startPreview();
+            //mCodeScanner.startPreview();
+            String restaurant_id = "1";
+            String table_no = "1";
+            Toast.makeText(Scanner.this, "Sample data:\nrestaurant_id = 1\ntable_no = 1", Toast.LENGTH_SHORT).show();
+
+            getMenu(restaurant_id, new VolleyCallback() {
+                @Override
+                public void onSuccess(String result) {
+                    Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
+                    intent.putExtra("menu", result);
+                    startActivity(intent);
+                }
+            });
         }
     }
 
@@ -98,17 +116,26 @@ public class Scanner extends AppCompatActivity {
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(VolleyError volleyError) {
+                String message = null;
+                if (volleyError instanceof NetworkError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof ServerError) {
+                    message = "The server could not be found. Please try again after some time";
+                } else if (volleyError instanceof AuthFailureError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof ParseError) {
+                    message = "Parsing error! Please try again after some time";
+                } else if (volleyError instanceof NoConnectionError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof TimeoutError) {
+                    message = "Connection TimeOut. Please check your internet connection.";
+                }
                 new AlertDialog.Builder(Scanner.this)
-                        .setTitle("Error")
+                        .setTitle("Couldn't fetch menu")
                         .setCancelable(true)
-                        .setMessage("Couldn't fetch menu.\n"+error.toString())
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).show();
+                        .setMessage(message)
+                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
             }
         });
         // Add the request to the RequestQueue.

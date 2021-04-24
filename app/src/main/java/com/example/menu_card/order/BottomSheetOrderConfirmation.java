@@ -22,7 +22,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        
         return inflater.inflate(R.layout.order_confirmation,container, false);
     }
 

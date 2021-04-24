@@ -64,6 +64,7 @@ public class activity_make_order extends AppCompatActivity {
     private boolean confirmOrder = false, checkOutOrder = false;
     MaterialButton confirm;
     MaterialButton checkout;
+    public JSONArray summary;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
@@ -74,7 +75,7 @@ public class activity_make_order extends AppCompatActivity {
 
          confirm = findViewById(R.id.confirm);
          checkout = findViewById(R.id.checkout);
-
+         summary = new JSONArray();
 
         LinearLayout linearLayout = findViewById(R.id.linear_layout_menu);
         linearLayout.setElevation(dpToPixel(10));
@@ -132,6 +133,7 @@ public class activity_make_order extends AppCompatActivity {
                 //Display Title
                 MaterialTextView materialTextView = new MaterialTextView(this);
                 materialTextView.setText(name);
+                materialTextView.setTag("name_"+id);
                 LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(dpToPixel(200), ViewGroup.LayoutParams.WRAP_CONTENT);
                 materialTextView.setTextColor(Color.BLACK);
                 materialTextView.setGravity(View.TEXT_ALIGNMENT_TEXT_START);
@@ -166,6 +168,7 @@ public class activity_make_order extends AppCompatActivity {
                 // Display the price
                 MaterialTextView materialTextView2 = new MaterialTextView(this);
                 materialTextView2.setText("Rs. "+ price);
+                materialTextView2.setTag("price_"+id);
                 LinearLayout.LayoutParams params2= new LinearLayout.LayoutParams(dpToPixel(200), ViewGroup.LayoutParams.WRAP_CONTENT);
                 materialTextView2.setTextColor(Color.BLACK);
                 materialTextView2.setGravity(View.TEXT_ALIGNMENT_TEXT_START);
@@ -279,21 +282,30 @@ public class activity_make_order extends AppCompatActivity {
                             Map.Entry pair = (Map.Entry)it.next();
                             String key = String.valueOf(pair.getKey());
                             list+=("item_id:"+key + ", Quantity:" + pair.getValue()+"\n");
-                            MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
-                            materialTextView.setText("0");
-                            it.remove(); // avoids a ConcurrentModificationException
+                            //MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                            //materialTextView.setText("0");
+
+                            // Get the name and price of the item and append to summary
+                            String name = ((MaterialTextView)linearLayout.findViewWithTag("name_"+key)).getText().toString();
+                            String price = ((MaterialTextView)linearLayout.findViewWithTag("price_"+key)).getText().toString();
+
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+                                jsonObject.put("name",name);
+                                jsonObject.put("price",price);
+                                jsonObject.put("quantity",pair.getValue());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            summary.put(jsonObject);
                         }
+
 
                         //BottomSheet On Confirm Order
                         BottomSheetOrderConfirmation confirm_order = new BottomSheetOrderConfirmation();
                         confirm_order.show(getSupportFragmentManager(),"TAG");
 
-
-                        new AlertDialog.Builder(activity_make_order.this)
-                                .setTitle("Ordered items")
-                                .setCancelable(true)
-                                .setMessage(list)
-                                .setPositiveButton("OK", (dialog, which) -> {}).show();
                         //confirmOrder = true;
                     }
                 }
