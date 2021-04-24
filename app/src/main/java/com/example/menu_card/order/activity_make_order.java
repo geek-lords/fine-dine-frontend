@@ -72,9 +72,13 @@ public class activity_make_order extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_order);
 
-
          confirm = findViewById(R.id.confirm);
          checkout = findViewById(R.id.checkout);
+
+        confirm.setOnClickListener(v -> {
+            BottomSheetOrderConfirmation confirm_order = new BottomSheetOrderConfirmation();
+            confirm_order.show(getSupportFragmentManager(),"TAG");
+        });
 
         LinearLayout linearLayout = findViewById(R.id.linear_layout_menu);
         linearLayout.setElevation(dpToPixel(10));

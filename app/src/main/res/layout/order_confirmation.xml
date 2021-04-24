@@ -11,14 +11,13 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.11">
+        app:layout_constraintVertical_bias="0.06">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="200dp"
@@ -32,7 +31,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Items"
                 android:textColor="@color/black"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <View
                 android:layout_width="110dp"
@@ -51,10 +50,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
+                android:layout_marginEnd="30dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Price"
                 android:textColor="@color/black"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <View
                 android:layout_width="110dp"
@@ -91,7 +91,7 @@
                 android:lineHeight="30dp"
                 android:layout_gravity="left"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="70dp"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -123,7 +123,7 @@
                 android:lineHeight="30dp"
                 android:layout_gravity="left"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -135,7 +135,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="70dp"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView
@@ -154,7 +154,7 @@
                 android:lineHeight="30dp"
                 android:layout_gravity="left"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -166,7 +166,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="70dp"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView
@@ -185,7 +185,7 @@
                 android:lineHeight="30dp"
                 android:layout_gravity="left"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -197,7 +197,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="70dp"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView
@@ -216,7 +216,7 @@
                 android:lineHeight="30dp"
                 android:layout_gravity="left"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
@@ -228,7 +228,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="70dp"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
         </com.google.android.material.card.MaterialCardView>
 
