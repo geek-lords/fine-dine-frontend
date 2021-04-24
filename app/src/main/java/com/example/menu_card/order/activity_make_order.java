@@ -112,6 +112,7 @@ public class activity_make_order extends AppCompatActivity {
                 cardView.setBackgroundColor(Color.WHITE);
                 cardView.setUseCompatPadding(true);
                 cardView.setForeground(Drawable.createFromPath("@drawable/ripple_effect"));
+                cardView.setClickable(true);
                 cardView.setFocusable(true);
                 cardView.setElevation(dpToPixel(1));
 
