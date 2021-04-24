@@ -75,10 +75,6 @@ public class activity_make_order extends AppCompatActivity {
          confirm = findViewById(R.id.confirm);
          checkout = findViewById(R.id.checkout);
 
-        confirm.setOnClickListener(v -> {
-            BottomSheetOrderConfirmation confirm_order = new BottomSheetOrderConfirmation();
-            confirm_order.show(getSupportFragmentManager(),"TAG");
-        });
 
         LinearLayout linearLayout = findViewById(R.id.linear_layout_menu);
         linearLayout.setElevation(dpToPixel(10));
@@ -286,6 +282,12 @@ public class activity_make_order extends AppCompatActivity {
                             materialTextView.setText("0");
                             it.remove(); // avoids a ConcurrentModificationException
                         }
+
+                        //BottomSheet On Confirm Order
+                        BottomSheetOrderConfirmation confirm_order = new BottomSheetOrderConfirmation();
+                        confirm_order.show(getSupportFragmentManager(),"TAG");
+
+
                         new AlertDialog.Builder(activity_make_order.this)
                                 .setTitle("Ordered items")
                                 .setCancelable(true)
