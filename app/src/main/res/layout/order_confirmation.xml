@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,8 +22,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -62,8 +61,8 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
                 android:layout_marginStart="5dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Quantity"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -83,8 +82,8 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_medium"
                 android:layout_marginStart="30dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Price"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
@@ -103,16 +102,15 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.028">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/linearLayoutCompat"
+            android:id="@+id/linearLayoutCompat_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -156,8 +154,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:fontFamily="@font/poppins_medium"
                     android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/poppins_medium"
                     android:lineHeight="30dp"
                     android:text="50$"
                     android:textColor="@color/black"
@@ -165,52 +163,11 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10sp">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginEnd="230dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:lineHeight="30dp"
-                    android:text="Some Dish"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:fontFamily="@font/poppins_medium"
-                    android:lineHeight="30dp"
-                    android:text="10"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:fontFamily="@font/poppins_medium"
-                    android:layout_marginEnd="30dp"
-                    android:lineHeight="30dp"
-                    android:text="50$"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.card.MaterialCardView>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="20dp"
-                android:layout_marginTop="10dp"
                 android:background="@color/black" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
