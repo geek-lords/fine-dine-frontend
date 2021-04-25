@@ -1,15 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="20dp"
     tools:context=".fragments.fragment_account">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+       <com.google.android.material.card.MaterialCardView
+           android:layout_width="75dp"
+           android:layout_height="75dp"
+           app:cardCornerRadius="100dp"
+           app:cardElevation="5dp"
+           android:foreground="@drawable/ic_avatar"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent">
+
+           <com.google.android.material.imageview.ShapeableImageView
+               android:id="@+id/profile"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               app:srcCompat="@drawable/ic_avatar" />
+
+       </com.google.android.material.card.MaterialCardView>
+
+       <com.google.android.material.card.MaterialCardView
+           android:layout_width="match_parent"
+           android:layout_height="150dp"
+           android:layout_marginTop="30dp"
+           app:cardCornerRadius="20dp"
+           app:cardElevation="4dp"
+           app:cardUseCompatPadding="true"
+           android:clickable="true"
+           android:foreground="@drawable/ripple_effect"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="0.0"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintVertical_bias="0.0">
+
+           <com.google.android.material.textview.MaterialTextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:textSize="20sp"
+               android:text="Name"
+               android:fontFamily="@font/poppins_medium"
+               android:layout_marginTop="50dp"
+               android:textColor="@color/black"
+               android:textAlignment="center"/>
+
+       </com.google.android.material.card.MaterialCardView>
+
+
+       <com.google.android.material.card.MaterialCardView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="190dp"
+           app:cardCornerRadius="10dp"
+           app:cardUseCompatPadding="true"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="0.0"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintVertical_bias="0.054">
+
+           <com.google.android.material.textview.MaterialTextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="100dp"
+               android:fontFamily="@font/poppins_medium"
+               android:text="yrohan740@gmail.com"
+               android:textColor="@color/black"
+               android:textSize="20sp" />
+
+           <com.google.android.material.card.MaterialCardView
+               android:layout_width="80dp"
+               android:layout_height="match_parent"
+               app:cardCornerRadius="10dp"
+               app:cardElevation="4dp"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent">
+
+               <com.google.android.material.textview.MaterialTextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_marginStart="10dp"
+                   android:fontFamily="@font/poppins_medium"
+                   android:text="Email"
+                   android:textColor="@color/purple_200"
+                   android:textSize="20sp" />
+
+           </com.google.android.material.card.MaterialCardView>
+
+       </com.google.android.material.card.MaterialCardView>
+
+       <com.google.android.material.card.MaterialCardView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="250dp"
+           app:cardCornerRadius="10dp"
+           app:cardUseCompatPadding="true"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="0.0"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintVertical_bias="0.0">
+
+           <com.google.android.material.textview.MaterialTextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="100dp"
+               android:fontFamily="@font/poppins_medium"
+               android:text="9665906736"
+               android:textColor="@color/black"
+               android:textSize="20sp" />
+
+           <com.google.android.material.card.MaterialCardView
+               android:layout_width="80dp"
+               android:layout_height="match_parent"
+               app:cardCornerRadius="10dp"
+               app:cardElevation="4dp"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent">
+
+               <com.google.android.material.textview.MaterialTextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_marginStart="10dp"
+                   android:fontFamily="@font/poppins_medium"
+                   android:text="Phone"
+                   android:textColor="@color/purple_200"
+                   android:textSize="20sp" />
+
+           </com.google.android.material.card.MaterialCardView>
+
+       </com.google.android.material.card.MaterialCardView>
+
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>
