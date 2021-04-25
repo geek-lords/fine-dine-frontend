@@ -99,7 +99,7 @@ public class activity_make_order extends AppCompatActivity {
                 String price = String.valueOf((int)Double.parseDouble(obj.getString("price")));
 
                 // Initializing this item id as 0 quantity by default
-                hashMap.put(id, "0");
+                //hashMap.put(id, "0");
 
                 MaterialCardView cardView = new MaterialCardView(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -167,7 +167,7 @@ public class activity_make_order extends AppCompatActivity {
 
                 // Display the price
                 MaterialTextView materialTextView2 = new MaterialTextView(this);
-                materialTextView2.setText("Rs. "+ price);
+                materialTextView2.setText("Rs."+ price);
                 materialTextView2.setTag("price_"+id);
                 LinearLayout.LayoutParams params2= new LinearLayout.LayoutParams(dpToPixel(200), ViewGroup.LayoutParams.WRAP_CONTENT);
                 materialTextView2.setTextColor(Color.BLACK);
@@ -276,18 +276,21 @@ public class activity_make_order extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if(!confirmOrder) {
+                        if(hashMap.size()<=0){
+                            Toast.makeText(activity_make_order.this, "Please select some items first", Toast.LENGTH_LONG).show();
+                            return;
+                        }
                         Iterator it = hashMap.entrySet().iterator();
-                        String list = "";
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
                             String key = String.valueOf(pair.getKey());
-                            list+=("item_id:"+key + ", Quantity:" + pair.getValue()+"\n");
                             //MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
                             //materialTextView.setText("0");
 
                             // Get the name and price of the item and append to summary
                             String name = ((MaterialTextView)linearLayout.findViewWithTag("name_"+key)).getText().toString();
-                            String price = ((MaterialTextView)linearLayout.findViewWithTag("price_"+key)).getText().toString();
+                            String price = (((MaterialTextView)linearLayout.findViewWithTag("price_"+key)).getText().toString()).replace("Rs.","");
+                            //price = String.valueOf(Integer.parseInt(price)*Integer.parseInt(String.valueOf(pair.getValue())));
 
                             JSONObject jsonObject = new JSONObject();
                             try {
@@ -304,8 +307,11 @@ public class activity_make_order extends AppCompatActivity {
 
                         //BottomSheet On Confirm Order
                         BottomSheetOrderConfirmation confirm_order = new BottomSheetOrderConfirmation();
+                        Bundle args=new Bundle();
+                        String userProfileString=summary.toString();
+                        args.putString("summary", userProfileString);
+                        confirm_order.setArguments(args);
                         confirm_order.show(getSupportFragmentManager(),"TAG");
-
                         //confirmOrder = true;
                     }
                 }
