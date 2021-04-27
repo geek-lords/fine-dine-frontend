@@ -156,7 +156,7 @@ public class BottomSheetSignIn extends BottomSheetDialogFragment {
                 if(!isVisible){
                     isVisible = true;
                     BottomSheetSignUp sign_up =  new BottomSheetSignUp();
-                    sign_up.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(),"TAG");
+                    sign_up.show(requireActivity().getSupportFragmentManager(),"TAG");
                 }
             }
         });

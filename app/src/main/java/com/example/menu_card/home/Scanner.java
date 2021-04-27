@@ -68,6 +68,8 @@ public class Scanner extends AppCompatActivity {
                             public void onSuccess(String result) {
                                 Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
                                 intent.putExtra("menu", result);
+                                intent.putExtra("restaurant_id", restaurant_id);
+                                intent.putExtra("table_no", table_no);
                                 startActivity(intent);
                             }
                         });
@@ -96,6 +98,8 @@ public class Scanner extends AppCompatActivity {
                 public void onSuccess(String result) {
                     Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
                     intent.putExtra("menu", result);
+                    intent.putExtra("restaurant_id", restaurant_id);
+                    intent.putExtra("table_no", table_no);
                     startActivity(intent);
                 }
             });

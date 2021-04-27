@@ -2,6 +2,7 @@ package com.example.menu_card.order;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,11 +15,29 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.menu_card.R;
+import com.example.menu_card.home.Activity_homepage;
+import com.example.menu_card.home.Scanner;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -28,7 +47,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
     MaterialButton confirm_order_btn;
@@ -126,7 +153,20 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         confirm_order_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "confirm", Toast.LENGTH_SHORT).show();
+                try {
+                    String order_id = getKey(requireActivity(), "order_id");
+                } catch (IOException e) {
+                    String restaurant_id = requireActivity().getIntent().getStringExtra("restaurant_id");
+                    String table_no = requireActivity().getIntent().getStringExtra("table_no");
+                    getOrderId(restaurant_id, table_no, new Scanner.VolleyCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            String order_id = result;
+                            Toast.makeText(getActivity(), order_id, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
             }
         });
 
@@ -144,5 +184,95 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
     }
     public static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
+    }
+    public static String getKey(Context context, String filename) throws IOException {
+        File file = new File(context.getFilesDir(), filename);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            return sb.toString();
+        } finally {
+            br.close();
+        }
+    }
+    private void getOrderId(String restaurant_id, String table_name, final Scanner.VolleyCallback callback) {
+        String jwt = null;
+        try {
+            jwt = getKey(getActivity(), "jwt_token");
+        } catch (IOException e) {
+            Toast.makeText(getActivity(), restaurant_id+"\n"+table_name, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), com.example.menu_card.registration.MainActivity.class);
+            getActivity().finish();
+            startActivity(intent);
+        }
+
+        String finalJwt = jwt;
+        String url = BASE_URL+"/order?table="+table_name+"&restaurant_id="+restaurant_id;
+        Toast.makeText(getActivity(), url, Toast.LENGTH_SHORT).show();
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                Request.Method.POST,url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if(response.has("error")) {
+                            try {
+                                Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
+                            callback.onSuccess(response.toString());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println(volleyError.toString());
+                String message = null;
+                if (volleyError instanceof NetworkError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof ServerError) {
+                    message = "The server could not be found. Please try again after some time";
+                } else if (volleyError instanceof AuthFailureError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof ParseError) {
+                    message = "Parsing error! Please try again after some time";
+                } else if (volleyError instanceof NoConnectionError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof TimeoutError) {
+                    message = "Connection TimeOut. Please check your internet connection.";
+                }
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Error")
+                        .setCancelable(true)
+                        .setMessage(message)
+                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+            }
+        }) {
+            //Passing some request headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("X-Auth-Token", finalJwt);
+                System.out.println(finalJwt);
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjReq);
+    }
+
+    public void placeOrder(JSONArray list, final Scanner.VolleyCallback callback){
+
     }
 }
