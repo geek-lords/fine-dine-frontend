@@ -49,7 +49,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:textSize="20sp"
-               android:text="Name"
+               android:text="John Doe"
                android:fontFamily="@font/poppins_medium"
                android:layout_marginTop="50dp"
                android:textColor="@color/black"
@@ -76,9 +76,10 @@
                android:layout_height="wrap_content"
                android:layout_marginStart="100dp"
                android:fontFamily="@font/poppins_medium"
-               android:text="yrohan740@gmail.com"
+               android:text="wow@fakeemail.com"
                android:textColor="@color/black"
-               android:textSize="20sp" />
+               android:paddingTop="5dp"
+               android:textSize="15sp" />
 
            <com.google.android.material.card.MaterialCardView
                android:layout_width="80dp"
@@ -97,6 +98,7 @@
                    android:fontFamily="@font/poppins_medium"
                    android:text="Email"
                    android:textColor="@color/purple_200"
+                   android:paddingTop="2dp"
                    android:textSize="20sp" />
 
            </com.google.android.material.card.MaterialCardView>
@@ -121,9 +123,10 @@
                android:layout_height="wrap_content"
                android:layout_marginStart="100dp"
                android:fontFamily="@font/poppins_medium"
-               android:text="9665906736"
+               android:text="8888888888"
                android:textColor="@color/black"
-               android:textSize="20sp" />
+               android:paddingTop="5dp"
+               android:textSize="15sp" />
 
            <com.google.android.material.card.MaterialCardView
                android:layout_width="80dp"
@@ -142,6 +145,7 @@
                    android:fontFamily="@font/poppins_medium"
                    android:text="Phone"
                    android:textColor="@color/purple_200"
+                   android:paddingTop="2dp"
                    android:textSize="20sp" />
 
            </com.google.android.material.card.MaterialCardView>
