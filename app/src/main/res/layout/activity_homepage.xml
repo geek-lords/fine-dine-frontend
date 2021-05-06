@@ -2,7 +2,7 @@
  <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="#F9F9FA"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -42,10 +42,9 @@
     <ImageView
         android:id="@+id/profile"
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_gravity="right"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="5dp"
         app:srcCompat="@drawable/ic_avatar" />
 
     <ImageView
@@ -61,7 +60,7 @@
         android:id="@+id/app_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="65dp"
         android:fontFamily="@font/aquire"
         android:text="FINE\nDINE"
@@ -72,10 +71,10 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="55dp"
+        android:layout_marginBottom="50dp"
         android:layout_marginTop="70dp"
         app:cardCornerRadius="30dp"
-        app:cardElevation="3dp">
+        app:cardElevation="5dp">
 
     <fragment
         android:id="@+id/fragment"

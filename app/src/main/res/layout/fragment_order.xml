@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    tools:context=".fragments.fragment_browse">
+    tools:context=".fragments.fragment_order"
+    android:background="#F9F9FA">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
@@ -15,7 +16,7 @@
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.102"
@@ -45,19 +46,24 @@
                 app:cardBackgroundColor="@color/white"
                 android:elevation="10dp"
                 android:foreground="@drawable/ripple_effect"
-                android:clickable="true"
-                app:cardUseCompatPadding="true">
+                android:clickable="true">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@color/purple_500"
-                    android:layout_margin="20dp"/>
+                    android:src="@drawable/restro"
+                    android:layout_marginBottom="29dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hotel_Name"
+                    android:text="Shiv Sagar"
                     android:textColor="@color/black"
                     android:layout_gravity="left"
                     android:layout_marginStart="100dp"
@@ -69,7 +75,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$100"
+                    android:text="Rs 600"
                     android:textColor="@color/black"
                     android:layout_gravity="left"
                     android:layout_marginStart="100dp"
@@ -79,322 +85,6 @@
                     android:fontFamily="@font/poppins_medium"/>
 
                  </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:elevation="10dp"
-                    android:foreground="@drawable/ripple_effect"
-                    android:clickable="true"
-                    app:cardUseCompatPadding="true">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/purple_500"
-                        android:layout_margin="20dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hotel_Name"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$100"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="45dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:elevation="10dp"
-                    android:foreground="@drawable/ripple_effect"
-                    android:clickable="true"
-                    app:cardUseCompatPadding="true">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/purple_500"
-                        android:layout_margin="20dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hotel_Name"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$100"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="45dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:elevation="10dp"
-                    android:foreground="@drawable/ripple_effect"
-                    android:clickable="true"
-                    app:cardUseCompatPadding="true">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/purple_500"
-                        android:layout_margin="20dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hotel_Name"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$100"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="45dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:elevation="10dp"
-                    android:foreground="@drawable/ripple_effect"
-                    android:clickable="true"
-                    app:cardUseCompatPadding="true">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/purple_500"
-                        android:layout_margin="20dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hotel_Name"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$100"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="45dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:elevation="10dp"
-                    android:foreground="@drawable/ripple_effect"
-                    android:clickable="true"
-                    app:cardUseCompatPadding="true">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/purple_500"
-                        android:layout_margin="20dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hotel_Name"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$100"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="45dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:elevation="10dp"
-                    android:foreground="@drawable/ripple_effect"
-                    android:clickable="true"
-                    app:cardUseCompatPadding="true">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/purple_500"
-                        android:layout_margin="20dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hotel_Name"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$100"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="45dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white"
-                    android:elevation="10dp"
-                    android:foreground="@drawable/ripple_effect"
-                    android:clickable="true"
-                    app:cardUseCompatPadding="true">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@color/purple_500"
-                        android:layout_margin="20dp"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hotel_Name"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$100"
-                        android:textColor="@color/black"
-                        android:layout_gravity="left"
-                        android:layout_marginStart="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="45dp"
-                        android:textSize="20sp"
-                        android:fontFamily="@font/poppins_medium"/>
-
-                </com.google.android.material.card.MaterialCardView>
 
 
             </LinearLayout>

@@ -16,7 +16,7 @@
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/fragment_browse"
-        android:name="com.example.menu_card.fragments.fragment_browse"
+        android:name="com.example.menu_card.fragments.fragment_order"
         android:label="fragment_browse"
         tools:layout="@layout/fragment_order" />
 </navigation>
