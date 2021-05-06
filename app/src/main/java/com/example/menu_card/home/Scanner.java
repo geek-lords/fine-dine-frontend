@@ -32,12 +32,14 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.example.menu_card.R;
 import com.google.zxing.Result;
 
+import org.json.JSONException;
+
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class Scanner extends AppCompatActivity {
 
     public interface VolleyCallback{
-        void onSuccess(String result);
+        void onSuccess(String result) throws JSONException;
     }
 
     private CodeScanner mCodeScanner;
@@ -86,24 +88,24 @@ public class Scanner extends AppCompatActivity {
         });
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+            //requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         }else {
             //mCodeScanner.startPreview();
-            String restaurant_id = "1";
-            String table_no = "1";
-            Toast.makeText(Scanner.this, "Sample data:\nrestaurant_id = 1\ntable_no = 1", Toast.LENGTH_SHORT).show();
-
-            getMenu(restaurant_id, new VolleyCallback() {
-                @Override
-                public void onSuccess(String result) {
-                    Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
-                    intent.putExtra("menu", result);
-                    intent.putExtra("restaurant_id", restaurant_id);
-                    intent.putExtra("table_no", table_no);
-                    startActivity(intent);
-                }
-            });
         }
+        String restaurant_id = "1";
+        String table_no = "1";
+        Toast.makeText(Scanner.this, "Sample data:\nrestaurant_id = 1\ntable_no = 1", Toast.LENGTH_SHORT).show();
+
+        getMenu(restaurant_id, new VolleyCallback() {
+            @Override
+            public void onSuccess(String result) {
+                Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
+                intent.putExtra("menu", result);
+                intent.putExtra("restaurant_id", restaurant_id);
+                intent.putExtra("table_no", table_no);
+                startActivity(intent);
+            }
+        });
     }
 
     private void getMenu(String restaurant_id, final VolleyCallback callback) {
@@ -116,7 +118,11 @@ public class Scanner extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        callback.onSuccess(response);
+                        try {
+                            callback.onSuccess(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
