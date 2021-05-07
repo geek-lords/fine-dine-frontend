@@ -155,9 +155,11 @@ public class BottomSheetSignIn extends BottomSheetDialogFragment {
                             }
                             new AlertDialog.Builder(getActivity())
                                     .setTitle("Error")
-                                    .setCancelable(true)
+                                    .setCancelable(false)
                                     .setMessage(message)
                                     .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                            isSubmit = false;
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }) {
                          //Passing some request headers

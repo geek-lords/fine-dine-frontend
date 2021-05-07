@@ -155,6 +155,8 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
                                     .setCancelable(true)
                                     .setMessage(message)
                                     .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                            isSubmit = false;
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }) {
                         //Passing some request headers
