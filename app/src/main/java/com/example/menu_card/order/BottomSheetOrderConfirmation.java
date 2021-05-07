@@ -198,9 +198,6 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         return view;
     }
 
-    public int getTheme() {
-        return R.style.AppBottomSheetDialogTheme;
-    }
 
     public int dpToPixel(float dp) {
         float density = this.getResources().getDisplayMetrics().density;
@@ -393,4 +390,9 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         requestQueue.add(jsonObjReq);
 
     }
+
+    public int getTheme() {
+        return R.style.AppBottomSheetDialogTheme;
+    }
+
 }

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    tools:context=".fragments.fragment_order"
-    android:background="#F9F9FA">
+    android:padding="10dp"
+    android:background="#F8F8F8"
+    tools:context=".fragments.fragment_order">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
@@ -48,17 +48,24 @@
                 android:foreground="@drawable/ripple_effect"
                 android:clickable="true">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/restro"
-                    android:layout_marginBottom="29dp"
-                    android:layout_marginTop="16dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="12dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:scaleType="fitXY"
-                    android:adjustViewBounds="true"
-                    />
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="1dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/restro"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true"/>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
@@ -66,7 +73,7 @@
                     android:text="Shiv Sagar"
                     android:textColor="@color/black"
                     android:layout_gravity="left"
-                    android:layout_marginStart="100dp"
+                    android:layout_marginStart="105dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="10dp"
                     android:textSize="20sp"
@@ -78,10 +85,10 @@
                     android:text="Rs 600"
                     android:textColor="@color/black"
                     android:layout_gravity="left"
-                    android:layout_marginStart="100dp"
+                    android:layout_marginStart="105dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginTop="45dp"
-                    android:textSize="20sp"
+                    android:layout_marginTop="40dp"
+                    android:textSize="15sp"
                     android:fontFamily="@font/poppins_medium"/>
 
                  </com.google.android.material.card.MaterialCardView>
