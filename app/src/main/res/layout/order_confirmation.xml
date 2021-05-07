@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F9F9FA">
 
     <View
         android:id="@+id/view"
@@ -188,8 +189,10 @@
         android:fontFamily="@font/poppins_medium"
         android:text="Total : "
         android:textColor="@color/black"
-        android:textSize="30sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/total_price"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView_summary" />
 
     <com.google.android.material.textview.MaterialTextView
