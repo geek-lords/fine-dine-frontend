@@ -53,6 +53,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -349,7 +350,22 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                                 e.printStackTrace();
                             }
                         }else if(response.has("success")){
-                            Toast.makeText(requireActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                            new AlertDialog.Builder(requireActivity())
+                                    .setTitle("Order Placed")
+                                    .setCancelable(false)
+                                    .setMessage("Your order has been successfully placed.")
+                                    .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                            Iterator it = activity_make_order.hashMap.entrySet().iterator();
+                            LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
+                            while (it.hasNext()) {
+                                Map.Entry pair = (Map.Entry)it.next();
+                                String key = String.valueOf(pair.getKey());
+                                MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                                materialTextView.setText("0");
+                                it.remove();
+                            }
+                            activity_make_order.summary = new JSONArray();
+                            dismiss();
                         }else{
                             Toast.makeText(requireActivity(), response.toString(), Toast.LENGTH_SHORT).show();
                         }

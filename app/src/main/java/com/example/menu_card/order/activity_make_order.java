@@ -64,7 +64,9 @@ public class activity_make_order extends AppCompatActivity {
     private boolean confirmOrder = false, checkOutOrder = false;
     MaterialButton confirm;
     MaterialButton checkout;
-    public JSONArray summary;
+    //Creating HashMap for keeping record of the items and their quantity
+    static HashMap<String,String> hashMap = new HashMap<>();
+    static JSONArray summary;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
@@ -75,15 +77,11 @@ public class activity_make_order extends AppCompatActivity {
 
          confirm = findViewById(R.id.confirm);
          checkout = findViewById(R.id.checkout);
-         summary = new JSONArray();
 
         LinearLayout linearLayout = findViewById(R.id.linear_layout_menu);
         linearLayout.setElevation(dpToPixel(10));
 
         String menu = getIntent().getStringExtra("menu");
-
-        //Creating HashMap for keeping record of the items and their quantity
-        HashMap<String,String> hashMap = new HashMap<>();
 
         try {
 
@@ -249,7 +247,11 @@ public class activity_make_order extends AppCompatActivity {
                         String new_quantity = String.valueOf(quantity);
                         materialTextView4.setText(new_quantity);
                         //Update the HashMap
-                        hashMap.put(cardView.getTag().toString(), new_quantity);
+                        if(quantity==0)
+                            hashMap.remove(cardView.getTag().toString());
+                        else
+                            hashMap.put(cardView.getTag().toString(), new_quantity);
+
                     }
                 });
                 materialTextView5.setOnClickListener(new View.OnClickListener() {
@@ -281,6 +283,7 @@ public class activity_make_order extends AppCompatActivity {
                             return;
                         }
                         Iterator it = hashMap.entrySet().iterator();
+                        summary = new JSONArray();
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry)it.next();
                             String key = String.valueOf(pair.getKey());
@@ -290,7 +293,7 @@ public class activity_make_order extends AppCompatActivity {
                             // Get the name and price of the item and append to summary
                             String name = ((MaterialTextView)linearLayout.findViewWithTag("name_"+key)).getText().toString();
                             String price = (((MaterialTextView)linearLayout.findViewWithTag("price_"+key)).getText().toString()).replace("Rs.","");
-                            //price = String.valueOf(Integer.parseInt(price)*Integer.parseInt(String.valueOf(pair.getValue())));
+                            price = String.valueOf(Integer.parseInt(price)*Integer.parseInt(String.valueOf(pair.getValue())));
 
                             JSONObject jsonObject = new JSONObject();
                             try {
