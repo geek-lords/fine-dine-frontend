@@ -49,6 +49,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -73,6 +74,9 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.order_confirmation,container, false);
 
+        // Create a List consisting of item_id and quantity to send to server
+        JSONArray item_list = new JSONArray();
+
         confirm_order_btn = view.findViewById(R.id.final_confirm_order_btn);
 
         ScrollView scrollView = view.findViewById(R.id.scrollView_summary);
@@ -87,10 +91,18 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
             JSONArray summary=new JSONArray(userProfileString);
             for(int i=0; i<summary.length(); i++){
                 JSONObject json = summary.getJSONObject(i);
+                String item_id = json.getString("item_id");
                 String name = json.getString("name");
                 String quantity = json.getString("quantity");
                 String price = json.getString("price");
                 total += Integer.parseInt(price);
+
+                // Fill the item list
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("menu_id", item_id);
+                jsonObject.put("quantity", quantity);
+                item_list.put(jsonObject);
+
                 // Create the card
                 MaterialCardView materialCardView = new MaterialCardView(requireActivity());
                 LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -155,17 +167,30 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 try {
                     String order_id = getKey(requireActivity(), "order_id");
+
+                    placeOrder(item_list, new Scanner.VolleyCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            Toast.makeText(requireActivity(), result, Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } catch (IOException e) {
                     String restaurant_id = requireActivity().getIntent().getStringExtra("restaurant_id");
                     String table_no = requireActivity().getIntent().getStringExtra("table_no");
                     getOrderId(restaurant_id, table_no, new Scanner.VolleyCallback() {
                         @Override
-                        public void onSuccess(String result) {
-                            String order_id = result;
-                            Toast.makeText(getActivity(), order_id, Toast.LENGTH_SHORT).show();
+                        public void onSuccess(String result) throws JSONException {
+                            saveTextToFile(getActivity(), "order_id", result);
+
+                            placeOrder(item_list, new Scanner.VolleyCallback() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    Toast.makeText(requireActivity(), result, Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     });
-                }
+                } catch (JSONException e) {e.printStackTrace();}
 
             }
         });
@@ -185,6 +210,18 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
     public static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
+
+    public static void saveTextToFile(Context context, String filename, String content) {
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = context.openFileOutput(filename, Context.MODE_APPEND);
+            outputStream.write(content.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String getKey(Context context, String filename) throws IOException {
         File file = new File(context.getFilesDir(), filename);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -202,14 +239,14 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
             br.close();
         }
     }
+
     private void getOrderId(String restaurant_id, String table_name, final Scanner.VolleyCallback callback) {
         String jwt = null;
         try {
-            jwt = getKey(getActivity(), "jwt_token");
+            jwt = getKey(requireActivity(), "jwt_token");
         } catch (IOException e) {
-            Toast.makeText(getActivity(), restaurant_id+"\n"+table_name, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getActivity(), com.example.menu_card.registration.MainActivity.class);
-            getActivity().finish();
+            requireActivity().finish();
             startActivity(intent);
         }
 
@@ -230,7 +267,11 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                                 e.printStackTrace();
                             }
                         }else{
-                            callback.onSuccess(response.toString());
+                            try {
+                                callback.onSuccess(response.getString("order_id"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -272,7 +313,84 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         requestQueue.add(jsonObjReq);
     }
 
-    public void placeOrder(JSONArray list, final Scanner.VolleyCallback callback){
+    public void placeOrder(JSONArray list, final Scanner.VolleyCallback callback) throws JSONException {
+        String jwt = null, order_id = null;
+        try {
+            jwt = getKey(requireActivity(), "jwt_token");
+        } catch (IOException e) {
+            Intent intent = new Intent(getActivity(), com.example.menu_card.registration.MainActivity.class);
+            requireActivity().finish();
+            startActivity(intent);
+        }
+
+        try {
+            order_id = getKey(requireActivity(), "order_id");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        JSONObject order_list = new JSONObject();
+        order_list.put("order_list", list);
+
+        String finalJwt = jwt;
+        String url = BASE_URL+"/order_items?order_id="+order_id;
+
+        RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                Request.Method.POST,url, order_list,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if(response.has("error")) {
+                            try {
+                                Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }else if(response.has("success")){
+                            Toast.makeText(requireActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(requireActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                System.out.println(volleyError.toString());
+                String message = null;
+                if (volleyError instanceof NetworkError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof ServerError) {
+                    message = "The server could not be found. Please try again after some time";
+                } else if (volleyError instanceof AuthFailureError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof ParseError) {
+                    message = "Parsing error! Please try again after some time";
+                } else if (volleyError instanceof NoConnectionError) {
+                    message = "Cannot connect to Internet. Please check your connection";
+                } else if (volleyError instanceof TimeoutError) {
+                    message = "Connection TimeOut. Please check your internet connection.";
+                }
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Error")
+                        .setCancelable(true)
+                        .setMessage(message)
+                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+            }
+        }) {
+            //Passing some request headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("X-Auth-Token", finalJwt);
+                System.out.println(finalJwt);
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjReq);
 
     }
 }

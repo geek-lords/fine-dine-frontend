@@ -14,11 +14,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -128,9 +134,27 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
                             }, new Response.ErrorListener() {
 
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            VolleyLog.d("Error: " + error.getMessage());
+                        public void onErrorResponse(VolleyError volleyError) {
+                            System.out.println(volleyError.toString());
+                            String message = null;
+                            if (volleyError instanceof NetworkError) {
+                                message = "Cannot connect to Internet. Please check your connection";
+                            } else if (volleyError instanceof ServerError) {
+                                message = "The server could not be found. Please try again after some time";
+                            } else if (volleyError instanceof AuthFailureError) {
+                                message = "Cannot connect to Internet. Please check your connection";
+                            } else if (volleyError instanceof ParseError) {
+                                message = "Parsing error! Please try again after some time";
+                            } else if (volleyError instanceof NoConnectionError) {
+                                message = "Cannot connect to Internet. Please check your connection";
+                            } else if (volleyError instanceof TimeoutError) {
+                                message = "Connection TimeOut. Please check your internet connection.";
+                            }
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("Error")
+                                    .setCancelable(true)
+                                    .setMessage(message)
+                                    .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
                         }
                     }) {
                         //Passing some request headers

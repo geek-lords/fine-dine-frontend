@@ -294,6 +294,7 @@ public class activity_make_order extends AppCompatActivity {
 
                             JSONObject jsonObject = new JSONObject();
                             try {
+                                jsonObject.put("item_id", key);
                                 jsonObject.put("name",name);
                                 jsonObject.put("price",price);
                                 jsonObject.put("quantity",pair.getValue());
