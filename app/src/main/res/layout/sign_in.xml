@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9FA">
+    android:background="#F9F9FA"
+    android:id="@+id/bottom_sign_in">
 
     <View
         android:layout_width="50dp"
