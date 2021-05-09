@@ -26,7 +26,6 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.menu_card.R;
@@ -155,8 +154,6 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
                                     .setCancelable(true)
                                     .setMessage(message)
                                     .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-                            isSubmit = false;
-                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }) {
                         //Passing some request headers
