@@ -15,6 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.menu_card.order.*;
 
 import com.example.menu_card.R;
+import com.example.menu_card.payment.PaymentActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -51,5 +52,11 @@ public class Activity_homepage extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void order(View view) {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra("orderID", "a7ae3055-7158-4d8e-97f0-95784a7bc2cc");
+        startActivityForResult(intent, 0);
     }
 }

@@ -14,7 +14,8 @@ import com.example.menu_card.home.Activity_homepage;
 public class MainActivity extends AppCompatActivity {
 
     Button button;
-    public static String BASE_URL = "https://fine-dine-backend.herokuapp.com/api/v1";
+//    public static String BASE_URL = "https://fine-dine-backend.herokuapp.com/api/v1";
+    public static String BASE_URL = "http://10.0.2.2:5000/api/v1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
