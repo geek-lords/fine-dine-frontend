@@ -314,7 +314,6 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
 
         String finalJwt = jwt;
         String url = BASE_URL+"/order?table="+table_name+"&restaurant_id="+restaurant_id;
-        Toast.makeText(getActivity(), url, Toast.LENGTH_SHORT).show();
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
@@ -452,9 +451,10 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                 }
                 new AlertDialog.Builder(getActivity())
                         .setTitle("Error")
-                        .setCancelable(true)
+                        .setCancelable(false)
                         .setMessage(message)
                         .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                confirm_order_btn.setEnabled(true);
             }
         }) {
             //Passing some request headers
