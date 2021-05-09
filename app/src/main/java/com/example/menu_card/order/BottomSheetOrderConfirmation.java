@@ -3,6 +3,7 @@ package com.example.menu_card.order;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -35,7 +36,9 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
+import com.example.menu_card.checkout.checkout;
 import com.example.menu_card.home.Activity_homepage;
 import com.example.menu_card.home.Scanner;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -61,10 +64,7 @@ import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
     MaterialButton confirm_order_btn;
-
-    public BottomSheetOrderConfirmation() {
-    }
-
+    DBHelper DB;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +78,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         // Create a List consisting of item_id and quantity to send to server
         JSONArray item_list = new JSONArray();
 
+        DB = new DBHelper(getActivity());
         confirm_order_btn = view.findViewById(R.id.final_confirm_order_btn);
 
         ScrollView scrollView = view.findViewById(R.id.scrollView_summary);
@@ -166,27 +167,90 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         confirm_order_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                confirm_order_btn.setEnabled(false);
                 try {
                     String order_id = getKey(requireActivity(), "order_id");
 
                     placeOrder(item_list, new Scanner.VolleyCallback() {
                         @Override
-                        public void onSuccess(String result) {
-                            Toast.makeText(requireActivity(), result, Toast.LENGTH_LONG).show();
+                        public void onSuccess(String result) throws JSONException {
+
+                            for(int i=0; i<activity_make_order.summary.length(); i++){
+                                JSONObject json = activity_make_order.summary.getJSONObject(i);
+                                String item_id = json.getString("item_id");
+                                String name = json.getString("name");
+                                String quantity = json.getString("quantity");
+                                String price = json.getString("price");
+
+                                Cursor cursor = DB.getOrderItem(order_id, item_id);
+
+                                int count = cursor.getCount();
+                                if(count>0){
+                                    cursor.moveToFirst();
+                                    int quant = Integer.parseInt(cursor.getString(cursor.getColumnIndex("quantity")));
+                                    quant += Integer.parseInt(quantity);
+
+                                    boolean bool = DB.updateOrderInfo(order_id, item_id, name, String.valueOf(quant), price);
+                                    Toast.makeText(getActivity(), "update:"+bool, Toast.LENGTH_SHORT).show();
+                                }else{
+                                    DB.insertOrderInfo(order_id, item_id, name, quantity, price);
+                                }
+
+                            }
+
+                            Iterator it = activity_make_order.hashMap.entrySet().iterator();
+                            LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
+                            while (it.hasNext()) {
+                                Map.Entry pair = (Map.Entry)it.next();
+                                String key = String.valueOf(pair.getKey());
+                                MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                                materialTextView.setText("0");
+                                it.remove();
+                            }
+                            activity_make_order.summary = new JSONArray();
+                            confirm_order_btn.setEnabled(true);
                         }
                     });
                 } catch (IOException e) {
                     String restaurant_id = requireActivity().getIntent().getStringExtra("restaurant_id");
                     String table_no = requireActivity().getIntent().getStringExtra("table_no");
+
                     getOrderId(restaurant_id, table_no, new Scanner.VolleyCallback() {
                         @Override
-                        public void onSuccess(String result) throws JSONException {
-                            saveTextToFile(getActivity(), "order_id", result);
+                        public void onSuccess(String order_id) throws JSONException {
+                            saveTextToFile(getActivity(), "order_id", order_id);
 
                             placeOrder(item_list, new Scanner.VolleyCallback() {
                                 @Override
-                                public void onSuccess(String result) {
-                                    Toast.makeText(requireActivity(), result, Toast.LENGTH_LONG).show();
+                                public void onSuccess(String result) throws JSONException {
+                                    for(int i=0; i<activity_make_order.summary.length(); i++){
+                                        JSONObject json = activity_make_order.summary.getJSONObject(i);
+                                        String item_id = json.getString("item_id");
+                                        String name = json.getString("name");
+                                        String quantity = json.getString("quantity");
+                                        String price = json.getString("price");
+
+                                        Cursor cursor = DB.getOrderItem(order_id, item_id);
+                                        if(cursor==null || cursor.getCount()<=0){
+                                            boolean bool = DB.insertOrderInfo(order_id, item_id, name, quantity, price);
+                                            //Toast.makeText(getActivity(),"count less:" + bool, Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            boolean bool = DB.updateOrderInfo(order_id, item_id, name, quantity, price);
+                                            //Toast.makeText(getActivity(), "count more:" + bool, Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+                                    Iterator it = activity_make_order.hashMap.entrySet().iterator();
+                                    LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
+                                    while (it.hasNext()) {
+                                        Map.Entry pair = (Map.Entry)it.next();
+                                        String key = String.valueOf(pair.getKey());
+                                        MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                                        materialTextView.setText("0");
+                                        it.remove();
+                                    }
+                                    activity_make_order.summary = new JSONArray();
+                                    confirm_order_btn.setEnabled(true);
                                 }
                             });
                         }
@@ -266,6 +330,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                             }
                         }else{
                             try {
+                                saveTextToFile(getActivity(), "tax_percent", String.valueOf(response.get("tax_percent")));
                                 callback.onSuccess(response.getString("order_id"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -311,6 +376,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         requestQueue.add(jsonObjReq);
     }
 
+    // Place order for items
     public void placeOrder(JSONArray list, final Scanner.VolleyCallback callback) throws JSONException {
         String jwt = null, order_id = null;
         try {
@@ -352,17 +418,15 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                                     .setCancelable(false)
                                     .setMessage("Your order has been successfully placed.")
                                     .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-                            Iterator it = activity_make_order.hashMap.entrySet().iterator();
-                            LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
-                            while (it.hasNext()) {
-                                Map.Entry pair = (Map.Entry)it.next();
-                                String key = String.valueOf(pair.getKey());
-                                MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
-                                materialTextView.setText("0");
-                                it.remove();
+                            try {
+                                //Toast.makeText(getActivity(), String.valueOf(activity_make_order.summary.length()), Toast.LENGTH_SHORT).show();
+                                callback.onSuccess("success");
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            activity_make_order.summary = new JSONArray();
+
                             dismiss();
+
                         }else{
                             Toast.makeText(requireActivity(), response.toString(), Toast.LENGTH_SHORT).show();
                         }

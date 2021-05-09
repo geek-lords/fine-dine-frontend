@@ -7,44 +7,53 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
-
     public DBHelper(Context context) {
         super(context,"Info.db", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table orders(order_id INTEGER PRIMARY KEY, tax_percent DECIMAL NOT NULL)");
+        db.execSQL("create table orders(order_id TEXT, item_id TEXT , name TEXT NOT NULL, quantity TEXT NOT NULL, price TEXT NOT NULL)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists task");
+
     }
 
-    public boolean insertOrderInfo(String order_id, double tax_percent){
-        SQLiteDatabase DB = this.getWritableDatabase();
+    public boolean insertOrderInfo(String order_id, String item_id, String name, String quantity, String price){
+        SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("order_id", order_id);
-        contentValues.put("tax_percent", tax_percent);
-        long result = DB.insert("orders",null,contentValues);
+        contentValues.put("order_id", order_id.trim());
+        contentValues.put("item_id", item_id);
+        contentValues.put("name", name);
+        contentValues.put("quantity", quantity);
+        contentValues.put("price", price);
+        long result = db.insert("orders",null,contentValues);
         return result != -1;
     }
-    public boolean updateOrderInfo(String order_id, double tax_percent){
-        SQLiteDatabase DB = this.getWritableDatabase();
+    public boolean updateOrderInfo(String order_id, String item_id, String name, String quantity, String price){
+        SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("order_id", order_id);
-        contentValues.put("tax_percent", tax_percent);
-        long result = DB.update("orders",contentValues,"ID=?",new String[]{String.valueOf(order_id)});
+        contentValues.put("name", name);
+        contentValues.put("quantity", quantity);
+        contentValues.put("price", price);
+        long result = db.update("orders",contentValues,"item_id='"+item_id+"' AND order_id='"+order_id.trim()+"'",null);
         return result != -1;
     }
-    public boolean deleteOrderInfo(String order_id){
-        SQLiteDatabase DB = this.getWritableDatabase();
-        long result = DB.delete("orders", "order_id=?", new String[]{String.valueOf(order_id)});
-        return result != -1;
+    public void deleteOrderInfo(String order_id){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("delete from orders where order_id='"+order_id.trim()+"'");
     }
-    public Cursor getOrderId() {
-        SQLiteDatabase DB = this.getWritableDatabase();
-        return DB.rawQuery("SELECT order_id, tax_percent FROM orders", null);
+    public Cursor getAllOrderItems(String order_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.rawQuery("SELECT item_id, name,quantity,price FROM orders where order_id='"+order_id.trim()+"'", null);
     }
+
+    public Cursor getOrderItem(String order_id, String item_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        //System.out.println("SELECT name, quantity, price FROM orders where order_id='"+order_id.trim()+"' AND item_id='"+item_id+"'");
+        return db.rawQuery("SELECT name, quantity, price FROM orders where order_id='"+order_id.trim()+"' AND item_id='"+item_id+"'", null);
+    }
+
 }

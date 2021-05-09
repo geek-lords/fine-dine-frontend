@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#F9F9FA"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F9F9FA"
     tools:context=".checkout.checkout">
 
     <com.google.android.material.card.MaterialCardView
@@ -28,181 +28,117 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Order Bill Summary"
+        android:textColor="@color/purple_700"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:layout_constraintVertical_bias="0.036">
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <LinearLayout
+                android:id="@+id/linear_bill_summary"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="140dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:maxLines="2"
-                    android:text="Some Dish          "
-                    android:textColor="@color/purple_200"
-                    android:textSize="20sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="-70dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="10Rs"
-                    android:textColor="@color/purple_700"
-                    android:textSize="20sp" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="140dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:maxLines="2"
-                    android:text="Some Dish          "
-                    android:textColor="@color/purple_200"
-                    android:textSize="20sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="-70dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="10Rs"
-                    android:textColor="@color/purple_700"
-                    android:textSize="20sp" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="140dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:maxLines="2"
-                    android:text="Some Dish          "
-                    android:textColor="@color/purple_200"
-                    android:textSize="20sp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="-70dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="10Rs"
-                    android:textColor="@color/purple_700"
-                    android:textSize="20sp" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView2"
-        android:layout_width="match_parent"
+            </LinearLayout>
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat2"
+        android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="10dp"
+        android:layout_marginStart="1dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.571"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-            app:layout_constraintVertical_bias="0.066">
+            android:layout_gravity="left"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="90dp"
+            android:fontFamily="@font/poppins_medium"
+            android:maxLines="2"
+            android:text="Price before tax"
+            android:textColor="#C51162"
+            android:textSize="20sp" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/price_before_tax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text=""
+            android:textColor="@color/purple_700"
+            android:textSize="20sp" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="140dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:maxLines="2"
-                    android:text="GST(10%)"
-                    android:textColor="#C51162"
-                    android:textSize="20sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="10Rs"
-                    android:textColor="@color/purple_700"
-                    android:textSize="20sp" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginStart="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat2">
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/gst_per"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="145dp"
+            android:fontFamily="@font/poppins_medium"
+            android:maxLines="2"
+            android:text=""
+            android:textColor="#C51162"
+            android:textSize="20sp" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/gst_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text=""
+            android:textColor="@color/purple_700"
+            android:textSize="20sp" />
 
-    </com.google.android.material.card.MaterialCardView>
-
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView2"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
@@ -234,10 +170,11 @@
                     android:textSize="20sp" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/total_bill_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="10Rs"
+                    android:text=""
                     android:textColor="@color/purple_700"
                     android:textSize="20sp" />
 
@@ -247,21 +184,20 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-
     <com.google.android.material.button.MaterialButton
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:text="Paytm"
-        android:textSize="20sp"
-        app:cornerRadius="5dp"
-        android:textColor="@color/purple_700"
+        android:layout_width="120sp"
+        android:layout_height="60sp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#00baf2"
         android:fontFamily="@font/poppins_medium"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Paytm"
+        android:textColor="#042e6f"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCardView3"
-        app:layout_constraintVertical_bias="0.284" />
-
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

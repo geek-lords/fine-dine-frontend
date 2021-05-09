@@ -3,6 +3,8 @@ package com.example.menu_card.order;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -35,6 +37,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
 import com.example.menu_card.home.Scanner;
 import com.google.android.material.button.MaterialButton;
@@ -48,6 +51,8 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -77,6 +82,7 @@ public class activity_make_order extends AppCompatActivity {
 
          confirm = findViewById(R.id.confirm);
          checkout = findViewById(R.id.checkout);
+         DBHelper DB = new DBHelper(this);
 
         LinearLayout linearLayout = findViewById(R.id.linear_layout_menu);
         linearLayout.setElevation(dpToPixel(10));
@@ -325,10 +331,24 @@ public class activity_make_order extends AppCompatActivity {
             checkout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!checkOutOrder){
-                        Toast.makeText(activity_make_order.this, "Checkout", Toast.LENGTH_SHORT).show();
-                        checkOutOrder = true;
-                    }
+                        if(!hashMap.isEmpty()){
+                            Toast.makeText(activity_make_order.this, "Please confirm the orders first.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            try {
+                                String order_id = getKey(activity_make_order.this, "order_id");
+                                Cursor cursor = DB.getAllOrderItems(order_id);
+                                Toast.makeText(activity_make_order.this, ""+cursor.getCount(), Toast.LENGTH_SHORT).show();
+                                if(cursor.getCount()<=0)
+                                    Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_SHORT).show();
+                                else{
+                                    Intent intent = new Intent(activity_make_order.this, com.example.menu_card.checkout.checkout.class);
+                                    startActivity(intent);
+                                }
+                            } catch (IOException e) {
+                                Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
                 }
             });
 
@@ -339,7 +359,23 @@ public class activity_make_order extends AppCompatActivity {
         float pixel = dp * density;
         return (int) pixel;
     }
+    public static String getKey(Context context, String filename) throws IOException {
+        File file = new File(context.getFilesDir(), filename);
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
 
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+            return sb.toString();
+        } finally {
+            br.close();
+        }
+    }
     public class DownloadImagesTask extends AsyncTask<ImageView, Void, Bitmap> {
 
         ImageView imageView = null;
