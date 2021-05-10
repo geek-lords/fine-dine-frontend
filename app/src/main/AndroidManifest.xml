@@ -24,7 +24,10 @@
         <activity android:name=".home.Scanner" />
         <activity android:name=".order.activity_make_order" />
         <activity android:name=".registration.SplashScreen">
-            <intent-filter>
+
+
+
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,6 +35,8 @@
         </activity>
         <activity android:name=".registration.MainActivity" />
         <activity android:name=".home.Activity_homepage" />
+        <activity android:name=".registration.activitySignIn"/>
+        <activity android:name=".registration.activitySignUp"/>
 
         <meta-data
             android:name="preloaded_fonts"

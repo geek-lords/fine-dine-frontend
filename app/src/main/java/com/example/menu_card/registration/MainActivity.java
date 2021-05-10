@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.menu_card.R;
-import com.example.menu_card.home.Activity_homepage;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,25 +22,16 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.register_button);
         button.setOnClickListener(v -> {
-            BottomSheetSignUp sign_up =  new BottomSheetSignUp();
-            sign_up.show(getSupportFragmentManager(),"TAG");
+            Intent intent = new Intent(getApplicationContext(), activitySignUp.class);
+            startActivity(intent);
         });
 
         button = findViewById(R.id.sign_in_button);
         button.setOnClickListener(v -> {
-            BottomSheetSignIn sign_in =  new BottomSheetSignIn();
-            sign_in.show(getSupportFragmentManager(),"TAG");
+            Intent intent = new Intent(getApplicationContext(), activitySignIn.class);
+            startActivity(intent);
         });
 
-        //Temp Method for testing homepage (delete it later on)
-        ImageView go_to_homepage = (ImageView)findViewById(R.id.imageView2);
-        go_to_homepage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Activity_homepage.class);
-                startActivity(intent);
-            }
-        });
 
     }
 }

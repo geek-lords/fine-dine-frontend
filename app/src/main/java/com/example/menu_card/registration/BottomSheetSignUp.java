@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class BottomSheetSignUp extends BottomSheetDialogFragment {
-    Button sign_up_btn;
+ /*  Button sign_up_btn;
     TextView sign_in_btn;
     static boolean isVisible = false;
     static boolean isSubmit = false;
@@ -231,5 +231,5 @@ public class BottomSheetSignUp extends BottomSheetDialogFragment {
             br.close();
         }
     }
-
+*/
 }

@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class BottomSheetSignIn extends BottomSheetDialogFragment {
-    TextView sign_up_btn;
+  /*  TextView sign_up_btn;
     Button sign_in_btn;
     static boolean isVisible = false;
     static boolean isSubmit = false;
@@ -236,4 +236,6 @@ public class BottomSheetSignIn extends BottomSheetDialogFragment {
             br.close();
         }
     }
+
+   */
 }

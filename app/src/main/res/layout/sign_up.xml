@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F9F9FA">
 
-    <com.google.android.material.textfield.TextInputLayout
+  <!--  <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edit_name"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -196,6 +196,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
