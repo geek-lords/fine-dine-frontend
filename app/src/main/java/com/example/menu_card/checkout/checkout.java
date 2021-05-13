@@ -146,10 +146,5 @@ public class checkout extends AppCompatActivity {
         total_amount.setText("Rs."+df.format(total_price));
 
     }
-    public int dpToPixel(float dp) {
-        float density = this.getResources().getDisplayMetrics().density;
-        float pixel = dp * density;
-        return (int) pixel;
-    }
 
 }

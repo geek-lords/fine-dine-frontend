@@ -26,8 +26,10 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.R;
 import com.example.menu_card.home.Activity_homepage;
+import com.example.menu_card.home.Scanner;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.json.JSONException;
@@ -42,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.example.menu_card.Common.common_methods._delete_file_if_exists;
 import static com.example.menu_card.Common.common_methods.getKey;
 import static com.example.menu_card.Common.common_methods.saveTextToFile;
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
@@ -59,7 +62,7 @@ public class activitySignIn extends AppCompatActivity {
 
 
         try {
-            Toast.makeText(getApplicationContext(), getKey(getApplicationContext(), "jwt_token"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activitySignIn.this, getKey(activitySignIn.this, "jwt_token"), Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,98 +81,50 @@ public class activitySignIn extends AppCompatActivity {
                 String password = pass_et.getText().toString();
 
                 if (email.trim().equals("") || password.trim().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Credentials can't be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activitySignIn.this, "Credentials can't be empty", Toast.LENGTH_SHORT).show();
                     isSubmit = false;
                     return;
                 }
                 if (!isEmailValid(email)) {
-                    Toast.makeText(getApplicationContext(), "Email is invalid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activitySignIn.this, "Email is invalid", Toast.LENGTH_SHORT).show();
+                    isSubmit = false;
+                    return;
+                }
+                if (password.length() < 6) {
+                    Toast.makeText(activitySignIn.this, "Password length should be at least 5 characters", Toast.LENGTH_SHORT).show();
                     isSubmit = false;
                     return;
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
                 // Sign user in through api
-                String url = BASE_URL + "/authenticate";
-
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("email", email);
-                    jsonObject.put("password", password);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                        Request.Method.POST, url, jsonObject,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                progressBar.setVisibility(View.INVISIBLE);
-                                if (response.has("error")) {
-                                    try {
-                                        Toast.makeText(getApplicationContext(), response.getString("error"), Toast.LENGTH_SHORT).show();
-                                        isSubmit = false;
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    try {
-                                        saveTextToFile(getApplicationContext(), "jwt_token", response.getString("jwt_token"));
-
-                                        Intent mainIntent = new Intent(getApplicationContext(), Activity_homepage.class);
-                                        startActivity(mainIntent);
-                                        finish();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-
+                signIn(email, password, new Scanner.VolleyCallback() {
                     @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        System.out.println(volleyError.toString());
-                        String message = null;
-                        if (volleyError instanceof NetworkError) {
-                            message = "Cannot connect to Internet. Please check your connection";
-                        } else if (volleyError instanceof ServerError) {
-                            message = "The server could not be found. Please try again after some time";
-                        } else if (volleyError instanceof AuthFailureError) {
-                            message = "Cannot connect to Internet. Please check your connection";
-                        } else if (volleyError instanceof ParseError) {
-                            message = "Parsing error! Please try again after some time";
-                        } else if (volleyError instanceof NoConnectionError) {
-                            message = "Cannot connect to Internet. Please check your connection";
-                        } else if (volleyError instanceof TimeoutError) {
-                            message = "Connection TimeOut. Please check your internet connection.";
+                    public void onSuccess(String result) throws JSONException {
+
+                        try {
+                            _delete_file_if_exists(activitySignIn.this, "jwt_token");
+                            _delete_file_if_exists(activitySignIn.this, "order_id");
+
+                            JSONObject response = new JSONObject(result);
+                            //Save JWT to system
+                            saveTextToFile(activitySignIn.this, "jwt_token", response.getString("jwt_token"));
+
+                            Intent mainIntent = new Intent(activitySignIn.this, Activity_homepage.class);
+                            startActivity(mainIntent);
+                            finish();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        new AlertDialog.Builder(getApplicationContext())
-                                .setTitle("Error")
-                                .setCancelable(false)
-                                .setMessage(message)
-                                .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-                        isSubmit = false;
-                        progressBar.setVisibility(View.INVISIBLE);
                     }
-                }) {
-                    //Passing some request headers
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("Content-Type", "application/json; charset=utf-8");
-                        return headers;
-                    }
-                };
-                requestQueue.add(jsonObjReq);
+                });
+
             }
         });
 
       sign_up_btn = findViewById(R.id.sign_up_redirect);
         sign_up_btn.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), activitySignUp.class);
+            Intent intent = new Intent(activitySignIn.this, activitySignUp.class);
             startActivity(intent);
         });
 
@@ -187,6 +142,59 @@ public class activitySignIn extends AppCompatActivity {
         return pat.matcher(email).matches();
     }
 
+    public void signIn(String email, String password, Scanner.VolleyCallback callback){
+        String url = BASE_URL + "/authenticate";
 
+        RequestQueue requestQueue = Volley.newRequestQueue(activitySignIn.this);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("email", email);
+            jsonObject.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                Request.Method.POST, url, jsonObject,
+                response -> {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    if (response.has("error")) {
+                        try {
+                            Toast.makeText(activitySignIn.this, response.getString("error"), Toast.LENGTH_SHORT).show();
+                            isSubmit = false;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            callback.onSuccess(response.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                new AlertDialog.Builder(activitySignIn.this)
+                        .setTitle("Error")
+                        .setCancelable(false)
+                        .setMessage(common_methods._print_server_response_error(volleyError))
+                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                isSubmit = false;
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        }) {
+            //Passing some request headers
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjReq);
+    }
 
 }

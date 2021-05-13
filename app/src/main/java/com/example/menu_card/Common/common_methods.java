@@ -2,6 +2,13 @@ package com.example.menu_card.Common;
 
 import android.content.Context;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.ParseError;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,8 +39,7 @@ public class common_methods {
     // Retrieving JWT from the system
     public static String getKey(Context context, String filename) throws IOException {
         File file = new File(context.getFilesDir(), filename);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -43,8 +49,34 @@ public class common_methods {
                 line = br.readLine();
             }
             return sb.toString();
-        } finally {
-            br.close();
         }
+    }
+
+    public static boolean _delete_file_if_exists(Context context, String filename){
+        File file = new File(context.getFilesDir(), filename);
+        if(file.exists()){
+            return file.delete();
+        }
+        return false;
+    }
+
+    public static String _print_server_response_error(VolleyError volleyError){
+        String message = null;
+        if (volleyError instanceof NetworkError) {
+            message = "Cannot connect to Internet. Please check your connection";
+        } else if (volleyError instanceof ServerError) {
+            message = "The server could not be found. Please try again after some time";
+        } else if (volleyError instanceof AuthFailureError) {
+            message = "Cannot connect to Internet. Please check your connection";
+        } else if (volleyError instanceof ParseError) {
+            message = "Parsing error! Please try again after some time";
+        } else if (volleyError instanceof TimeoutError) {
+            message = "Connection TimeOut. Please check your internet connection.";
+        }
+
+        if (message==null)
+            message = volleyError.toString();
+
+        return message;
     }
 }
