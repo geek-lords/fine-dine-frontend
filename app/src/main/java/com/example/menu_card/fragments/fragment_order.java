@@ -93,11 +93,7 @@ public class fragment_order extends Fragment {
             public void onSuccess(String result) throws JSONException {
                 progressBar.setVisibility(View.INVISIBLE);
                 JSONArray history = new JSONObject(result).getJSONArray("history");
-                new AlertDialog.Builder(requireActivity())
-                        .setTitle("response")
-                        .setCancelable(true)
-                        .setMessage(history.toString())
-                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+
                 for(int i=0; i<history.length(); i++){
                     JSONObject order = history.getJSONObject(i);
 
