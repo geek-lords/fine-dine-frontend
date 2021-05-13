@@ -64,6 +64,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.example.menu_card.Common.common_methods.getKey;
+
 public class activity_make_order extends AppCompatActivity {
 
     private boolean confirmOrder = false, checkOutOrder = false;
@@ -359,23 +361,7 @@ public class activity_make_order extends AppCompatActivity {
         float pixel = dp * density;
         return (int) pixel;
     }
-    public static String getKey(Context context, String filename) throws IOException {
-        File file = new File(context.getFilesDir(), filename);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
 
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
-            }
-            return sb.toString();
-        } finally {
-            br.close();
-        }
-    }
     public class DownloadImagesTask extends AsyncTask<ImageView, Void, Bitmap> {
 
         ImageView imageView = null;

@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import static com.example.menu_card.Common.common_methods.saveTextToFile;
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class activitySignUp extends AppCompatActivity {
@@ -182,34 +183,6 @@ public class activitySignUp extends AppCompatActivity {
         if (email == null)
             return false;
         return pat.matcher(email).matches();
-    }
-
-    public static void saveTextToFile(Context context, String filename, String content) {
-        FileOutputStream outputStream = null;
-        try {
-            outputStream = context.openFileOutput(filename, Context.MODE_APPEND);
-            outputStream.write(content.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public static String getKey(Context context, String filename) throws IOException {
-        File file = new File(context.getFilesDir(), filename);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
-            }
-            return sb.toString();
-        } finally {
-            br.close();
-        }
     }
 
 }

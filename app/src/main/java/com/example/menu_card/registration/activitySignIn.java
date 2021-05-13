@@ -42,6 +42,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.example.menu_card.Common.common_methods.getKey;
+import static com.example.menu_card.Common.common_methods.saveTextToFile;
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class activitySignIn extends AppCompatActivity {
@@ -185,32 +187,6 @@ public class activitySignIn extends AppCompatActivity {
         return pat.matcher(email).matches();
     }
 
-    public static void saveTextToFile(Context context, String filename, String content) {
-        FileOutputStream outputStream = null;
-        try {
-            outputStream = context.openFileOutput(filename, Context.MODE_APPEND);
-            outputStream.write(content.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static String getKey(Context context, String filename) throws IOException {
-        File file = new File(context.getFilesDir(), filename);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
 
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
-            }
-            return sb.toString();
-        } finally {
-            br.close();
-        }
-    }
 }

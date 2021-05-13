@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static com.example.menu_card.Common.common_methods.getKey;
+
 public class SplashScreen extends AppCompatActivity {
 
     @Override
@@ -43,22 +45,6 @@ public class SplashScreen extends AppCompatActivity {
 
     }
 
-    public static String getKey(Context context, String filename) throws IOException {
-        File file = new File(context.getFilesDir(), filename);
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        try {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
 
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
-            }
-            return sb.toString();
-        } finally {
-            br.close();
-        }
-    }
 }
 
