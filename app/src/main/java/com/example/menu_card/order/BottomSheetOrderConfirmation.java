@@ -1,13 +1,11 @@
 package com.example.menu_card.order;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,30 +15,21 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
-import com.example.menu_card.checkout.checkout;
-import com.example.menu_card.home.Activity_homepage;
 import com.example.menu_card.home.Scanner;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
@@ -51,15 +40,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.example.menu_card.Common.common_methods.getKey;
 import static com.example.menu_card.Common.common_methods.saveTextToFile;
@@ -93,6 +77,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         linearLayoutCompat.setOrientation(LinearLayoutCompat.VERTICAL);
         linearLayoutCompat.setLayoutParams(param);
 
+        assert getArguments() != null;
         String userProfileString=getArguments().getString("summary");
         int total=0;
         try {
@@ -170,103 +155,92 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
             total_price.setText("Rs."+total);
         }
 
-        confirm_order_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirm_order_btn.setEnabled(false);
-                progressBar.setVisibility(View.VISIBLE);
-                try {
-                    String order_id = getKey(requireActivity(), "order_id");
+        confirm_order_btn.setOnClickListener(v -> {
+            confirm_order_btn.setEnabled(false);
+            progressBar.setVisibility(View.VISIBLE);
+            try {
+                String order_id = getKey(requireActivity(), "order_id");
 
-                    placeOrder(item_list, new Scanner.VolleyCallback() {
-                        @Override
-                        public void onSuccess(String result) throws JSONException {
-                            progressBar.setVisibility(View.INVISIBLE);
+                placeOrder(item_list, result -> {
+                    progressBar.setVisibility(View.INVISIBLE);
 
-                            for(int i=0; i<activity_make_order.summary.length(); i++){
-                                JSONObject json = activity_make_order.summary.getJSONObject(i);
-                                String item_id = json.getString("item_id");
-                                String name = json.getString("name");
-                                String quantity = json.getString("quantity");
-                                String price = json.getString("price");
+                    for(int i=0; i<activity_make_order.summary.length(); i++){
+                        JSONObject json = activity_make_order.summary.getJSONObject(i);
+                        String item_id = json.getString("item_id");
+                        String name = json.getString("name");
+                        String quantity = json.getString("quantity");
+                        String price = json.getString("price");
 
-                                Cursor cursor = DB.getOrderItem(order_id, item_id);
+                        Cursor cursor = DB.getOrderItem(order_id, item_id);
 
-                                int count = cursor.getCount();
-                                if(count>0){
-                                    cursor.moveToFirst();
-                                    int quant = Integer.parseInt(cursor.getString(cursor.getColumnIndex("quantity")));
-                                    quant += Integer.parseInt(quantity);
+                        int count = cursor.getCount();
+                        if(count>0){
+                            cursor.moveToFirst();
+                            int quant = Integer.parseInt(cursor.getString(cursor.getColumnIndex("quantity")));
+                            quant += Integer.parseInt(quantity);
 
-                                    boolean bool = DB.updateOrderInfo(order_id, item_id, name, String.valueOf(quant), price);
+                            if(!DB.updateOrderInfo(order_id, item_id, name, String.valueOf(quant), price))
+                                Toast.makeText(requireActivity(), "Error updating in local DB", Toast.LENGTH_SHORT).show();
 
-                                }else{
-                                    DB.insertOrderInfo(order_id, item_id, name, quantity, price);
-                                }
+                        }else{
+                            DB.insertOrderInfo(order_id, item_id, name, quantity, price);
+                        }
 
+                    }
+
+                    Iterator<Map.Entry<String, String>> it = activity_make_order.hashMap.entrySet().iterator();
+                    LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
+                    while (it.hasNext()) {
+                        Map.Entry<String, String> pair = it.next();
+                        String key = String.valueOf(pair.getKey());
+                        MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                        materialTextView.setText("0");
+                        it.remove();
+                    }
+                    activity_make_order.summary = new JSONArray();
+                    confirm_order_btn.setEnabled(true);
+                });
+            } catch (IOException e) {
+                String restaurant_id = requireActivity().getIntent().getStringExtra("restaurant_id");
+                String table_no = requireActivity().getIntent().getStringExtra("table_no");
+
+                getOrderId(restaurant_id, table_no, order_id -> {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    saveTextToFile(requireActivity(), "order_id", order_id);
+
+                    placeOrder(item_list, result -> {
+                        for(int i=0; i<activity_make_order.summary.length(); i++){
+                            JSONObject json = activity_make_order.summary.getJSONObject(i);
+                            String item_id = json.getString("item_id");
+                            String name = json.getString("name");
+                            String quantity = json.getString("quantity");
+                            String price = json.getString("price");
+
+                            Cursor cursor = DB.getOrderItem(order_id, item_id);
+                            if(cursor==null || cursor.getCount()<=0){
+                                if(!DB.insertOrderInfo(order_id, item_id, name, quantity, price))
+                                    Toast.makeText(getActivity(),"Error inserting in local DB", Toast.LENGTH_SHORT).show();
+                            }else{
+                               if(!DB.updateOrderInfo(order_id, item_id, name, quantity, price))
+                                    Toast.makeText(getActivity(), "Error updating in local DB", Toast.LENGTH_SHORT).show();
                             }
 
-                            Iterator it = activity_make_order.hashMap.entrySet().iterator();
-                            LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
-                            while (it.hasNext()) {
-                                Map.Entry pair = (Map.Entry)it.next();
-                                String key = String.valueOf(pair.getKey());
-                                MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
-                                materialTextView.setText("0");
-                                it.remove();
-                            }
-                            activity_make_order.summary = new JSONArray();
-                            confirm_order_btn.setEnabled(true);
                         }
-                    });
-                } catch (IOException e) {
-                    String restaurant_id = requireActivity().getIntent().getStringExtra("restaurant_id");
-                    String table_no = requireActivity().getIntent().getStringExtra("table_no");
-
-                    getOrderId(restaurant_id, table_no, new Scanner.VolleyCallback() {
-                        @Override
-                        public void onSuccess(String order_id) throws JSONException {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            saveTextToFile(getActivity(), "order_id", order_id);
-
-                            placeOrder(item_list, new Scanner.VolleyCallback() {
-                                @Override
-                                public void onSuccess(String result) throws JSONException {
-                                    for(int i=0; i<activity_make_order.summary.length(); i++){
-                                        JSONObject json = activity_make_order.summary.getJSONObject(i);
-                                        String item_id = json.getString("item_id");
-                                        String name = json.getString("name");
-                                        String quantity = json.getString("quantity");
-                                        String price = json.getString("price");
-
-                                        Cursor cursor = DB.getOrderItem(order_id, item_id);
-                                        if(cursor==null || cursor.getCount()<=0){
-                                            boolean bool = DB.insertOrderInfo(order_id, item_id, name, quantity, price);
-                                            //Toast.makeText(getActivity(),"count less:" + bool, Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            boolean bool = DB.updateOrderInfo(order_id, item_id, name, quantity, price);
-                                            //Toast.makeText(getActivity(), "count more:" + bool, Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-                                    Iterator it = activity_make_order.hashMap.entrySet().iterator();
-                                    LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
-                                    while (it.hasNext()) {
-                                        Map.Entry pair = (Map.Entry)it.next();
-                                        String key = String.valueOf(pair.getKey());
-                                        MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
-                                        materialTextView.setText("0");
-                                        it.remove();
-                                    }
-                                    activity_make_order.summary = new JSONArray();
-                                    confirm_order_btn.setEnabled(true);
-                                }
-                            });
+                        Iterator<Map.Entry<String, String>> it = activity_make_order.hashMap.entrySet().iterator();
+                        LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
+                        while (it.hasNext()) {
+                            Map.Entry<String, String> pair = it.next();
+                            String key = String.valueOf(pair.getKey());
+                            MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                            materialTextView.setText("0");
+                            it.remove();
                         }
+                        activity_make_order.summary = new JSONArray();
+                        confirm_order_btn.setEnabled(true);
                     });
-                } catch (JSONException e) {e.printStackTrace();}
+                });
+            } catch (JSONException e) {e.printStackTrace();}
 
-            }
         });
 
         return view;
@@ -277,9 +251,6 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
         float density = this.getResources().getDisplayMetrics().density;
         float pixel = dp * density;
         return (int) pixel;
-    }
-    public static int spToPx(float sp, Context context) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 
     private void getOrderId(String restaurant_id, String table_name, final Scanner.VolleyCallback callback) {
@@ -294,58 +265,49 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
 
         String finalJwt = jwt;
         String url = BASE_URL+"/order?table="+table_name+"&restaurant_id="+restaurant_id;
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 Request.Method.POST,url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if(response.has("error")) {
-                            try {
-                                Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }else{
-                            try {
-                                saveTextToFile(getActivity(), "tax_percent", String.valueOf(response.get("tax_percent")));
-                                callback.onSuccess(response.getString("order_id"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                response -> {
+                    if(response.has("error")) {
+                        try {
+                            Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        try {
+                            saveTextToFile(requireActivity(), "tax_percent", String.valueOf(response.get("tax_percent")));
+                            callback.onSuccess(response.getString("order_id"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                System.out.println(volleyError.toString());
-                String message = null;
-                if (volleyError instanceof NetworkError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof ServerError) {
-                    message = "The server could not be found. Please try again after some time";
-                } else if (volleyError instanceof AuthFailureError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof ParseError) {
-                    message = "Parsing error! Please try again after some time";
-                } else if (volleyError instanceof NoConnectionError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof TimeoutError) {
-                    message = "Connection TimeOut. Please check your internet connection.";
-                }
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Error")
-                        .setCancelable(true)
-                        .setMessage(message)
-                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-            }
-        }) {
+                }, volleyError -> {
+                    System.out.println(volleyError.toString());
+                    String message = null;
+                    if (volleyError instanceof NetworkError) {
+                        message = "Cannot connect to Internet. Please check your connection";
+                    } else if (volleyError instanceof ServerError) {
+                        message = "The server could not be found. Please try again after some time";
+                    } else if (volleyError instanceof AuthFailureError) {
+                        message = "Cannot connect to Internet. Please check your connection";
+                    } else if (volleyError instanceof ParseError) {
+                        message = "Parsing error! Please try again after some time";
+                    } else if (volleyError instanceof TimeoutError) {
+                        message = "Connection TimeOut. Please check your internet connection.";
+                    }
+                    new AlertDialog.Builder(requireActivity())
+                            .setTitle("Error")
+                            .setCancelable(true)
+                            .setMessage(message)
+                            .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                }) {
             //Passing some request headers
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
                 headers.put("X-Auth-Token", finalJwt);
                 System.out.println(finalJwt);
@@ -382,66 +344,57 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 Request.Method.POST,url, order_list,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if(response.has("error")) {
-                            try {
-                                Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }else if(response.has("success")){
-                            new AlertDialog.Builder(requireActivity())
-                                    .setTitle("Order Placed")
-                                    .setCancelable(false)
-                                    .setMessage("Your order has been successfully placed.")
-                                    .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-                            try {
-                                //Toast.makeText(getActivity(), String.valueOf(activity_make_order.summary.length()), Toast.LENGTH_SHORT).show();
-                                callback.onSuccess("success");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            dismiss();
-
-                        }else{
-                            Toast.makeText(requireActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                response -> {
+                    if(response.has("error")) {
+                        try {
+                            Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    }
-                }, new Response.ErrorListener() {
+                    }else if(response.has("success")){
+                        new AlertDialog.Builder(requireActivity())
+                                .setTitle("Order Placed")
+                                .setCancelable(false)
+                                .setMessage("Your order has been successfully placed.")
+                                .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                        try {
+                            //Toast.makeText(getActivity(), String.valueOf(activity_make_order.summary.length()), Toast.LENGTH_SHORT).show();
+                            callback.onSuccess("success");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                progressBar.setVisibility(View.INVISIBLE);
-                System.out.println(volleyError.toString());
-                String message = null;
-                if (volleyError instanceof NetworkError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof ServerError) {
-                    message = "The server could not be found. Please try again after some time";
-                } else if (volleyError instanceof AuthFailureError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof ParseError) {
-                    message = "Parsing error! Please try again after some time";
-                } else if (volleyError instanceof NoConnectionError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof TimeoutError) {
-                    message = "Connection TimeOut. Please check your internet connection.";
-                }
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Error")
-                        .setCancelable(false)
-                        .setMessage(message)
-                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-                confirm_order_btn.setEnabled(true);
-            }
-        }) {
+                        dismiss();
+
+                    }else{
+                        Toast.makeText(requireActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }, volleyError -> {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    System.out.println(volleyError.toString());
+                    String message = null;
+                    if (volleyError instanceof NetworkError) {
+                        message = "Cannot connect to Internet. Please check your connection";
+                    } else if (volleyError instanceof ServerError) {
+                        message = "The server could not be found. Please try again after some time";
+                    } else if (volleyError instanceof AuthFailureError) {
+                        message = "Cannot connect to Internet. Please check your connection";
+                    } else if (volleyError instanceof ParseError) {
+                        message = "Parsing error! Please try again after some time";
+                    } else if (volleyError instanceof TimeoutError) {
+                        message = "Connection TimeOut. Please check your internet connection.";
+                    }
+                    new AlertDialog.Builder(requireActivity())
+                            .setTitle("Error")
+                            .setCancelable(false)
+                            .setMessage(message)
+                            .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                    confirm_order_btn.setEnabled(true);
+                }) {
             //Passing some request headers
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
                 headers.put("X-Auth-Token", finalJwt);
                 System.out.println(finalJwt);

@@ -20,7 +20,6 @@ import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
 import com.example.menu_card.home.Activity_homepage;
-import com.example.menu_card.registration.MainActivity;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.IOException;

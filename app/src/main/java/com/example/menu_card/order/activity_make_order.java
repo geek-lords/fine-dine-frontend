@@ -1,8 +1,6 @@
 package com.example.menu_card.order;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,35 +9,22 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.shapes.Shape;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
-import com.example.menu_card.home.Scanner;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -48,17 +33,10 @@ import com.google.android.material.textview.MaterialTextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,7 +46,7 @@ import static com.example.menu_card.Common.common_methods.getKey;
 
 public class activity_make_order extends AppCompatActivity {
 
-    private boolean confirmOrder = false, checkOutOrder = false;
+    private final boolean confirmOrder = false;
     MaterialButton confirm;
     MaterialButton checkout;
     //Creating HashMap for keeping record of the items and their quantity
@@ -198,7 +176,7 @@ public class activity_make_order extends AppCompatActivity {
                 materialTextView3.setGravity(View.TEXT_ALIGNMENT_CENTER);
                 materialTextView3.setTextSize(25);
                 materialTextView3.setTextColor(Color.BLACK);
-                params3.gravity = Gravity.RIGHT;
+                params3.gravity = Gravity.END;
                 params3.leftMargin = dpToPixel(235);
                 params3.topMargin = dpToPixel(105);
                 Typeface typeface3 = ResourcesCompat.getFont(this, R.font.poppins_medium);
@@ -235,7 +213,7 @@ public class activity_make_order extends AppCompatActivity {
                 materialTextView5.setGravity(View.TEXT_ALIGNMENT_CENTER);
                 materialTextView5.setTextSize(25);
                 materialTextView5.setTextColor(Color.BLACK);
-                params5.gravity = Gravity.RIGHT;
+                params5.gravity = Gravity.END;
                 params5.leftMargin = dpToPixel(295);
                 params5.topMargin = dpToPixel(105);
                 Typeface typeface5 = ResourcesCompat.getFont(this, R.font.poppins_medium);
@@ -246,33 +224,27 @@ public class activity_make_order extends AppCompatActivity {
                 cardView.addView(materialTextView5);
 
                 //Set up on click listeners for quantity
-                materialTextView3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String str_quantity = materialTextView4.getText().toString();
-                        int quantity = Integer.parseInt(str_quantity);
-                        if(quantity > 0) quantity--;
-                        String new_quantity = String.valueOf(quantity);
-                        materialTextView4.setText(new_quantity);
-                        //Update the HashMap
-                        if(quantity==0)
-                            hashMap.remove(cardView.getTag().toString());
-                        else
-                            hashMap.put(cardView.getTag().toString(), new_quantity);
-
-                    }
-                });
-                materialTextView5.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String str_quantity = materialTextView4.getText().toString();
-                        int quantity = Integer.parseInt(str_quantity);
-                        if(quantity < 10) quantity++;
-                        String new_quantity = String.valueOf(quantity);
-                        materialTextView4.setText(new_quantity);
-                        //Update the HashMap
+                materialTextView3.setOnClickListener(v -> {
+                    String str_quantity = materialTextView4.getText().toString();
+                    int quantity = Integer.parseInt(str_quantity);
+                    if(quantity > 0) quantity--;
+                    String new_quantity = String.valueOf(quantity);
+                    materialTextView4.setText(new_quantity);
+                    //Update the HashMap
+                    if(quantity==0)
+                        hashMap.remove(cardView.getTag().toString());
+                    else
                         hashMap.put(cardView.getTag().toString(), new_quantity);
-                    }
+
+                });
+                materialTextView5.setOnClickListener(v -> {
+                    String str_quantity = materialTextView4.getText().toString();
+                    int quantity = Integer.parseInt(str_quantity);
+                    if(quantity < 10) quantity++;
+                    String new_quantity = String.valueOf(quantity);
+                    materialTextView4.setText(new_quantity);
+                    //Update the HashMap
+                    hashMap.put(cardView.getTag().toString(), new_quantity);
                 });
                 linearLayout.addView(cardView);
             }
@@ -282,76 +254,68 @@ public class activity_make_order extends AppCompatActivity {
         }
 
         // Set up onclick listener for confirm order
-            confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!confirmOrder) {
-                        if(hashMap.size()<=0){
-                            Toast.makeText(activity_make_order.this, "Please select some items first", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        Iterator it = hashMap.entrySet().iterator();
-                        summary = new JSONArray();
-                        while (it.hasNext()) {
-                            Map.Entry pair = (Map.Entry)it.next();
-                            String key = String.valueOf(pair.getKey());
-                            //MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
-                            //materialTextView.setText("0");
-
-                            // Get the name and price of the item and append to summary
-                            String name = ((MaterialTextView)linearLayout.findViewWithTag("name_"+key)).getText().toString();
-                            String price = (((MaterialTextView)linearLayout.findViewWithTag("price_"+key)).getText().toString()).replace("Rs.","");
-                            price = String.valueOf(Integer.parseInt(price)*Integer.parseInt(String.valueOf(pair.getValue())));
-
-                            JSONObject jsonObject = new JSONObject();
-                            try {
-                                jsonObject.put("item_id", key);
-                                jsonObject.put("name",name);
-                                jsonObject.put("price",price);
-                                jsonObject.put("quantity",pair.getValue());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            summary.put(jsonObject);
-                        }
-
-
-                        //BottomSheet On Confirm Order
-                        BottomSheetOrderConfirmation confirm_order = new BottomSheetOrderConfirmation();
-                        Bundle args=new Bundle();
-                        String userProfileString=summary.toString();
-                        args.putString("summary", userProfileString);
-                        confirm_order.setArguments(args);
-                        confirm_order.show(getSupportFragmentManager(),"TAG");
-                        //confirmOrder = true;
+            confirm.setOnClickListener(v -> {
+                if(!confirmOrder) {
+                    if(hashMap.size()<=0){
+                        Toast.makeText(activity_make_order.this, "Please select some items first", Toast.LENGTH_LONG).show();
+                        return;
                     }
+                    Iterator<Map.Entry<String, String>> it = hashMap.entrySet().iterator();
+                    summary = new JSONArray();
+                    while (it.hasNext()) {
+                        Map.Entry<String, String> pair = it.next();
+                        String key = String.valueOf(pair.getKey());
+
+                        // Get the name and price of the item and append to summary
+                        String name = ((MaterialTextView)linearLayout.findViewWithTag("name_"+key)).getText().toString();
+                        String price = (((MaterialTextView)linearLayout.findViewWithTag("price_"+key)).getText().toString()).replace("Rs.","");
+                        price = String.valueOf(Integer.parseInt(price)*Integer.parseInt(String.valueOf(pair.getValue())));
+
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("item_id", key);
+                            jsonObject.put("name",name);
+                            jsonObject.put("price",price);
+                            jsonObject.put("quantity",pair.getValue());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        summary.put(jsonObject);
+                    }
+
+
+                    //BottomSheet On Confirm Order
+                    BottomSheetOrderConfirmation confirm_order = new BottomSheetOrderConfirmation();
+                    Bundle args=new Bundle();
+                    String userProfileString=summary.toString();
+                    args.putString("summary", userProfileString);
+                    confirm_order.setArguments(args);
+                    confirm_order.show(getSupportFragmentManager(),"TAG");
+                    //confirmOrder = true;
                 }
             });
 
         // Set up onclick listener for checkout
-            checkout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                        if(!hashMap.isEmpty()){
-                            Toast.makeText(activity_make_order.this, "Please place the the order first.", Toast.LENGTH_LONG).show();
-                        }else{
-                            try {
-                                String order_id = getKey(activity_make_order.this, "order_id");
-                                Cursor cursor = DB.getAllOrderItems(order_id);
-                                Toast.makeText(activity_make_order.this, ""+cursor.getCount(), Toast.LENGTH_LONG).show();
-                                if(cursor.getCount()<=0)
-                                    Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_LONG).show();
-                                else{
-                                    Intent intent = new Intent(activity_make_order.this, com.example.menu_card.checkout.checkout.class);
-                                    startActivity(intent);
-                                }
-                            } catch (IOException e) {
+            checkout.setOnClickListener(v -> {
+                    if(!hashMap.isEmpty()){
+                        Toast.makeText(activity_make_order.this, "Please place the the order first.", Toast.LENGTH_LONG).show();
+                    }else{
+                        try {
+                            String order_id = getKey(activity_make_order.this, "order_id");
+                            Cursor cursor = DB.getAllOrderItems(order_id);
+                            Toast.makeText(activity_make_order.this, ""+cursor.getCount(), Toast.LENGTH_LONG).show();
+                            if(cursor.getCount()<=0)
                                 Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_LONG).show();
+                            else{
+                                Intent intent = new Intent(activity_make_order.this, com.example.menu_card.checkout.checkout.class);
+                                startActivity(intent);
                             }
-
+                        } catch (IOException e) {
+                            Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_LONG).show();
                         }
-                }
+
+                    }
             });
 
 
@@ -362,8 +326,10 @@ public class activity_make_order extends AppCompatActivity {
         return (int) pixel;
     }
 
-    public class DownloadImagesTask extends AsyncTask<ImageView, Void, Bitmap> {
+    @SuppressWarnings("deprecation")
+    public static class DownloadImagesTask extends AsyncTask<ImageView, Void, Bitmap> {
 
+        @SuppressLint("StaticFieldLeak")
         ImageView imageView = null;
 
         @Override
@@ -379,7 +345,7 @@ public class activity_make_order extends AppCompatActivity {
 
         private Bitmap download_Image(String url) {
 
-            Bitmap bmp =null;
+            Bitmap bmp;
             try{
                 URL ulrn = new URL(url);
                 HttpURLConnection con = (HttpURLConnection)ulrn.openConnection();
@@ -388,8 +354,8 @@ public class activity_make_order extends AppCompatActivity {
                 if (null != bmp)
                     return bmp;
 
-            }catch(Exception e){}
-            return bmp;
+            }catch(Exception ignored){}
+            return null;
         }
     }
 

@@ -1,9 +1,5 @@
 package com.example.menu_card.home;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,15 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.ParseError;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.menu_card.Common.common_methods;
@@ -52,7 +45,7 @@ public class detailed_recent_order extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_recent_order);
 
-        JSONObject order_info = null;
+        JSONObject order_info;
         linearLayout = findViewById(R.id.detailed_linearLayout_bill);
         progressBar = findViewById(R.id.progressBar_detailed);
         progressBar.setVisibility(View.VISIBLE);
@@ -65,97 +58,94 @@ public class detailed_recent_order extends AppCompatActivity {
             MaterialTextView hotel_name = findViewById(R.id.hotel_name_detailed_order);
             hotel_name.setText(order_info.getString("name"));
 
-            getDetailedRecentOrder(order_info.getString("id"), new Scanner.VolleyCallback() {
-                @Override
-                public void onSuccess(String result) throws JSONException {
+            getDetailedRecentOrder(order_info.getString("id"), result -> {
 
-                    JSONArray bill = new JSONObject(result).getJSONArray("bill");
+                JSONArray bill = new JSONObject(result).getJSONArray("bill");
 
-                    float total = 0;
+                float total = 0;
 
-                    for(int i=0; i<bill.length(); i++){
-                        JSONObject order  = bill.getJSONObject(i);
+                for(int i=0; i<bill.length(); i++){
+                    JSONObject order  = bill.getJSONObject(i);
 
 
-                        LinearLayout row = new LinearLayout(detailed_recent_order.this);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                        row.setLayoutParams(params);
-                        row.setWeightSum(3);
+                    LinearLayout row = new LinearLayout(detailed_recent_order.this);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    row.setLayoutParams(params);
+                    row.setWeightSum(3);
 
-                        String name = order.getString(("name"));
-                        String quantity = order.getString("quantity");
-                        String price = order.getString("price");
-                        price = String.valueOf(Float.parseFloat(price) * Integer.parseInt(quantity));
+                    String name = order.getString(("name"));
+                    String quantity = order.getString("quantity");
+                    String price = order.getString("price");
+                    price = String.valueOf(Float.parseFloat(price) * Integer.parseInt(quantity));
 
-                        // Name
-                        MaterialTextView item_name = new MaterialTextView(detailed_recent_order.this);
-                        item_name.setText(name);
-                        LinearLayout.LayoutParams params1= new LinearLayout.LayoutParams(400, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    // Name
+                    MaterialTextView item_name = new MaterialTextView(detailed_recent_order.this);
+                    item_name.setText(name);
+                    LinearLayout.LayoutParams params1= new LinearLayout.LayoutParams(400, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                        Typeface typeface = ResourcesCompat.getFont(detailed_recent_order.this, R.font.poppins_medium);
-                        item_name.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        item_name.setTypeface(typeface,Typeface.BOLD);
-                        item_name.setLayoutParams(params1);
-                        item_name.setTextColor(Color.BLACK);
-                        item_name.setTextSize(18);
+                    Typeface typeface = ResourcesCompat.getFont(detailed_recent_order.this, R.font.poppins_medium);
+                    item_name.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    item_name.setTypeface(typeface,Typeface.BOLD);
+                    item_name.setLayoutParams(params1);
+                    item_name.setTextColor(Color.BLACK);
+                    item_name.setTextSize(18);
 
-                        row.addView(item_name);
+                    row.addView(item_name);
 
-                        // Quantity
-                        MaterialTextView item_quantity = new MaterialTextView(detailed_recent_order.this);
-                        item_quantity.setText(quantity);
-                        LinearLayout.LayoutParams params2= new LinearLayout.LayoutParams(300, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        params2.leftMargin = 10;
-                        Typeface typeface2 = ResourcesCompat.getFont(detailed_recent_order.this, R.font.poppins_medium);
-                        item_quantity.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        item_quantity.setTypeface(typeface2,Typeface.BOLD);
-                        item_quantity.setLayoutParams(params2);
-                        item_quantity.setTextColor(Color.BLACK);
-                        item_quantity.setTextSize(18);
+                    // Quantity
+                    MaterialTextView item_quantity = new MaterialTextView(detailed_recent_order.this);
+                    item_quantity.setText(quantity);
+                    LinearLayout.LayoutParams params2= new LinearLayout.LayoutParams(300, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params2.leftMargin = 10;
+                    Typeface typeface2 = ResourcesCompat.getFont(detailed_recent_order.this, R.font.poppins_medium);
+                    item_quantity.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    item_quantity.setTypeface(typeface2,Typeface.BOLD);
+                    item_quantity.setLayoutParams(params2);
+                    item_quantity.setTextColor(Color.BLACK);
+                    item_quantity.setTextSize(18);
 
-                        row.addView(item_quantity);
+                    row.addView(item_quantity);
 
-                        //Price
-                        MaterialTextView item_price = new MaterialTextView(detailed_recent_order.this);
+                    //Price
+                    MaterialTextView item_price = new MaterialTextView(detailed_recent_order.this);
 
-                        total += Float.parseFloat(price);
+                    total += Float.parseFloat(price);
 
-                        item_price.setText("Rs."+price);
-                        LinearLayout.LayoutParams params3= new LinearLayout.LayoutParams(300, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        //params3.weight = 1;
-                        Typeface typeface3 = ResourcesCompat.getFont(detailed_recent_order.this, R.font.poppins_medium);
-                        item_price.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        item_price.setTypeface(typeface3,Typeface.BOLD);
-                        item_price.setLayoutParams(params3);
-                        item_price.setTextColor(Color.BLACK);
-                        item_price.setTextSize(18);
+                    item_price.setText("Rs."+price);
+                    LinearLayout.LayoutParams params3= new LinearLayout.LayoutParams(300, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    //params3.weight = 1;
+                    Typeface typeface3 = ResourcesCompat.getFont(detailed_recent_order.this, R.font.poppins_medium);
+                    item_price.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    item_price.setTypeface(typeface3,Typeface.BOLD);
+                    item_price.setLayoutParams(params3);
+                    item_price.setTextColor(Color.BLACK);
+                    item_price.setTextSize(18);
 
-                        row.addView(item_price);
+                    row.addView(item_price);
 
-                        linearLayout.addView(row);
+                    linearLayout.addView(row);
 
-                    }
-
-                    float tax_per = Float.parseFloat(finalOrder_info.getString("tax_percent"));
-                    float total_tax = (tax_per/100)*total;
-                    float total_price = total_tax+total;
-
-                    //Toast.makeText(this, ""+tax_per+"\n"+total_tax+"\n"+total_price, Toast.LENGTH_SHORT).show();
-
-                    MaterialTextView price_before_tax = findViewById(R.id.detailed_price_before_tax);
-                    price_before_tax.setText("Rs."+total);
-
-                    MaterialTextView gst_per = findViewById(R.id.detailed_gst_per);
-                    gst_per.setText("GST("+tax_per+"%)");
-
-                    MaterialTextView gst_price = findViewById(R.id.detailed_gst_price);
-                    DecimalFormat df = new DecimalFormat();
-                    df.setMaximumFractionDigits(2);
-                    gst_price.setText("Rs."+df.format(total_tax));
-
-                    MaterialTextView total_amount = findViewById(R.id.detailed_total_bill_amount);
-                    total_amount.setText("Rs."+df.format(total_price));
                 }
+
+                float tax_per = Float.parseFloat(finalOrder_info.getString("tax_percent"));
+                float total_tax = (tax_per/100)*total;
+                float total_price = total_tax+total;
+
+                //Toast.makeText(this, ""+tax_per+"\n"+total_tax+"\n"+total_price, Toast.LENGTH_SHORT).show();
+
+                MaterialTextView price_before_tax = findViewById(R.id.detailed_price_before_tax);
+                price_before_tax.setText("Rs."+total);
+
+                MaterialTextView gst_per = findViewById(R.id.detailed_gst_per);
+                gst_per.setText("GST("+tax_per+"%)");
+
+                MaterialTextView gst_price = findViewById(R.id.detailed_gst_price);
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                gst_price.setText("Rs."+df.format(total_tax));
+
+                MaterialTextView total_amount = findViewById(R.id.detailed_total_bill_amount);
+                total_amount.setText("Rs."+df.format(total_price));
             });
 
         } catch (JSONException e) {
@@ -163,7 +153,7 @@ public class detailed_recent_order extends AppCompatActivity {
         }
     }
 
-    public void getDetailedRecentOrder(String order_id, Scanner.VolleyCallback callback) throws JSONException {
+    public void getDetailedRecentOrder(String order_id, Scanner.VolleyCallback callback) {
         String jwt = null;
         try {
             jwt = getKey(detailed_recent_order.this, "jwt_token");
@@ -179,40 +169,33 @@ public class detailed_recent_order extends AppCompatActivity {
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 Request.Method.POST,url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        if(response.has("error")) {
-                            try {
-                                Toast.makeText(detailed_recent_order.this, response.getString("error"), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }else{
-                            try {
-                                callback.onSuccess(response.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                response -> {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    if(response.has("error")) {
+                        try {
+                            Toast.makeText(detailed_recent_order.this, response.getString("error"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        try {
+                            callback.onSuccess(response.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                progressBar.setVisibility(View.INVISIBLE);
-                new AlertDialog.Builder(detailed_recent_order.this)
-                        .setTitle("Error")
-                        .setCancelable(true)
-                        .setMessage(common_methods._print_server_response_error(volleyError))
-                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-            }
-        }) {
+                }, volleyError -> {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    new AlertDialog.Builder(detailed_recent_order.this)
+                            .setTitle("Error")
+                            .setCancelable(true)
+                            .setMessage(common_methods._print_server_response_error(volleyError))
+                            .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                }) {
             //Passing some request headers
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json");
                 headers.put("X-Auth-Token", finalJwt);
                 System.out.println(finalJwt);

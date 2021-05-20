@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,9 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
-import com.budiyev.android.codescanner.DecodeCallback;
 import com.example.menu_card.R;
-import com.google.zxing.Result;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,36 +52,28 @@ public class Scanner extends AppCompatActivity {
 
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(Scanner.this, scannerView);
-        mCodeScanner.setDecodeCallback(new DecodeCallback() {
-            @Override
-            public void onDecoded(@NonNull final Result result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Get the JSON data from the result
-                        JSONObject rest_info;
-                        String restaurant_id, table_no;
+        mCodeScanner.setDecodeCallback(result -> runOnUiThread(() -> {
+            // Get the JSON data from the result
+            JSONObject rest_info;
+            String restaurant_id, table_no;
 
-                        try {
-                            rest_info = new JSONObject(result.getText());
-                            restaurant_id = rest_info.getString("restaurant_id");
-                            table_no = URLEncoder.encode(rest_info.getString("table"), StandardCharsets.UTF_8.toString());
+            try {
+                rest_info = new JSONObject(result.getText());
+                restaurant_id = rest_info.getString("restaurant_id");
+                table_no = URLEncoder.encode(rest_info.getString("table"), StandardCharsets.UTF_8.toString());
 
-                            getMenu(restaurant_id, result1 -> {
-                                Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
-                                intent.putExtra("menu", result1);
-                                intent.putExtra("restaurant_id", restaurant_id);
-                                intent.putExtra("table_no", table_no);
-                                startActivity(intent);
-                            });
-                        } catch (JSONException | UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
+                getMenu(restaurant_id, result1 -> {
+                    Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
+                    intent.putExtra("menu", result1);
+                    intent.putExtra("restaurant_id", restaurant_id);
+                    intent.putExtra("table_no", table_no);
+                    startActivity(intent);
                 });
+            } catch (JSONException | UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-        });
+
+        }));
         scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
