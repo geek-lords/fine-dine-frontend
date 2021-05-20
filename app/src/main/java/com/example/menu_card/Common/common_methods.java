@@ -101,6 +101,14 @@ public class common_methods {
             System.err.println("Couldn't delete tax_percent after payment");
             return false;
         }
+        if(!_delete_file_if_exists(context, "restaurant_id")){
+            System.err.println("Couldn't delete restaurant_id after payment");
+            return false;
+        }
+        if(!_delete_file_if_exists(context, "table_no")){
+            System.err.println("Couldn't delete table_no after payment");
+            return false;
+        }
 
         return true;
     }
