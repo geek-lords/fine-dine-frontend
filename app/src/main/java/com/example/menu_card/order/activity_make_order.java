@@ -334,20 +334,20 @@ public class activity_make_order extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                         if(!hashMap.isEmpty()){
-                            Toast.makeText(activity_make_order.this, "Please confirm the orders first.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity_make_order.this, "Please place the the order first.", Toast.LENGTH_LONG).show();
                         }else{
                             try {
                                 String order_id = getKey(activity_make_order.this, "order_id");
                                 Cursor cursor = DB.getAllOrderItems(order_id);
-                                Toast.makeText(activity_make_order.this, ""+cursor.getCount(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity_make_order.this, ""+cursor.getCount(), Toast.LENGTH_LONG).show();
                                 if(cursor.getCount()<=0)
-                                    Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_LONG).show();
                                 else{
                                     Intent intent = new Intent(activity_make_order.this, com.example.menu_card.checkout.checkout.class);
                                     startActivity(intent);
                                 }
                             } catch (IOException e) {
-                                Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_LONG).show();
                             }
 
                         }

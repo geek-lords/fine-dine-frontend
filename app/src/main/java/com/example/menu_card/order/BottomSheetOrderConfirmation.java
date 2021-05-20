@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -67,6 +68,8 @@ import static com.example.menu_card.registration.MainActivity.BASE_URL;
 public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
     MaterialButton confirm_order_btn;
     DBHelper DB;
+    ProgressBar progressBar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +85,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
 
         DB = new DBHelper(getActivity());
         confirm_order_btn = view.findViewById(R.id.final_confirm_order_btn);
+        progressBar = view.findViewById(R.id.progressBar_place_order);
 
         ScrollView scrollView = view.findViewById(R.id.scrollView_summary);
         LinearLayoutCompat linearLayoutCompat = new LinearLayoutCompat(requireActivity());
@@ -170,12 +174,14 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 confirm_order_btn.setEnabled(false);
+                progressBar.setVisibility(View.VISIBLE);
                 try {
                     String order_id = getKey(requireActivity(), "order_id");
 
                     placeOrder(item_list, new Scanner.VolleyCallback() {
                         @Override
                         public void onSuccess(String result) throws JSONException {
+                            progressBar.setVisibility(View.INVISIBLE);
 
                             for(int i=0; i<activity_make_order.summary.length(); i++){
                                 JSONObject json = activity_make_order.summary.getJSONObject(i);
@@ -193,7 +199,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                                     quant += Integer.parseInt(quantity);
 
                                     boolean bool = DB.updateOrderInfo(order_id, item_id, name, String.valueOf(quant), price);
-                                    Toast.makeText(getActivity(), "update:"+bool, Toast.LENGTH_SHORT).show();
+
                                 }else{
                                     DB.insertOrderInfo(order_id, item_id, name, quantity, price);
                                 }
@@ -220,6 +226,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                     getOrderId(restaurant_id, table_no, new Scanner.VolleyCallback() {
                         @Override
                         public void onSuccess(String order_id) throws JSONException {
+                            progressBar.setVisibility(View.INVISIBLE);
                             saveTextToFile(getActivity(), "order_id", order_id);
 
                             placeOrder(item_list, new Scanner.VolleyCallback() {
@@ -407,6 +414,7 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
 
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                progressBar.setVisibility(View.INVISIBLE);
                 System.out.println(volleyError.toString());
                 String message = null;
                 if (volleyError instanceof NetworkError) {

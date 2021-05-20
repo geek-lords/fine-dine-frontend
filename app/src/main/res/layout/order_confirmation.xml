@@ -211,10 +211,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/final_confirm_order_btn"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
+        android:layout_width="191dp"
+        android:layout_height="63dp"
         android:layout_marginTop="70dp"
-        android:text="Confirm order"
+        android:text="ORDER THESE ITEMS"
         android:textColor="@color/white"
         android:textSize="13sp"
         app:backgroundTint="@color/purple_700"
@@ -225,5 +225,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView_summary"
         app:layout_constraintVertical_bias="0.0" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_place_order"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/final_confirm_order_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
