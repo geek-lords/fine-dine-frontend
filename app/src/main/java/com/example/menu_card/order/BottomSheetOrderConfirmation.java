@@ -19,15 +19,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
 import com.example.menu_card.home.Scanner;
@@ -205,7 +201,6 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                 String table_no = requireActivity().getIntent().getStringExtra("table_no");
 
                 getOrderId(restaurant_id, table_no, order_id -> {
-                    progressBar.setVisibility(View.INVISIBLE);
                     saveTextToFile(requireActivity(), "order_id", order_id);
 
                     placeOrder(item_list, result -> {
@@ -278,7 +273,9 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                         }
                     }else{
                         try {
-                            saveTextToFile(requireActivity(), "tax_percent", String.valueOf(response.get("tax_percent")));
+                            common_methods.saveTextToFile(requireActivity(), "restaurant_id", restaurant_id);
+                            common_methods.saveTextToFile(requireActivity(), "table_no", table_name);
+                            common_methods.saveTextToFile(requireActivity(), "tax_percent", String.valueOf(response.get("tax_percent")));
                             callback.onSuccess(response.getString("order_id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -286,22 +283,10 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                     }
                 }, volleyError -> {
                     System.out.println(volleyError.toString());
-                    String message = null;
-                    if (volleyError instanceof NetworkError) {
-                        message = "Cannot connect to Internet. Please check your connection";
-                    } else if (volleyError instanceof ServerError) {
-                        message = "The server could not be found. Please try again after some time";
-                    } else if (volleyError instanceof AuthFailureError) {
-                        message = "Cannot connect to Internet. Please check your connection";
-                    } else if (volleyError instanceof ParseError) {
-                        message = "Parsing error! Please try again after some time";
-                    } else if (volleyError instanceof TimeoutError) {
-                        message = "Connection TimeOut. Please check your internet connection.";
-                    }
                     new AlertDialog.Builder(requireActivity())
                             .setTitle("Error")
                             .setCancelable(true)
-                            .setMessage(message)
+                            .setMessage(common_methods._print_server_response_error(volleyError))
                             .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
                 }) {
             //Passing some request headers
@@ -371,23 +356,10 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                     }
                 }, volleyError -> {
                     progressBar.setVisibility(View.INVISIBLE);
-                    System.out.println(volleyError.toString());
-                    String message = null;
-                    if (volleyError instanceof NetworkError) {
-                        message = "Cannot connect to Internet. Please check your connection";
-                    } else if (volleyError instanceof ServerError) {
-                        message = "The server could not be found. Please try again after some time";
-                    } else if (volleyError instanceof AuthFailureError) {
-                        message = "Cannot connect to Internet. Please check your connection";
-                    } else if (volleyError instanceof ParseError) {
-                        message = "Parsing error! Please try again after some time";
-                    } else if (volleyError instanceof TimeoutError) {
-                        message = "Connection TimeOut. Please check your internet connection.";
-                    }
                     new AlertDialog.Builder(requireActivity())
                             .setTitle("Error")
                             .setCancelable(false)
-                            .setMessage(message)
+                            .setMessage(common_methods._print_server_response_error(volleyError))
                             .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
                     confirm_order_btn.setEnabled(true);
                 }) {
@@ -408,5 +380,4 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
     public int getTheme() {
         return R.style.AppBottomSheetDialogTheme;
     }
-
 }
