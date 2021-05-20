@@ -8,6 +8,7 @@ import com.android.volley.ParseError;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.example.menu_card.DB.DBHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +17,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class common_methods {
+    // These are all the static methods common throughout the app
+
 
     // Saving JWT to system
     public static void saveTextToFile(Context context, String filename, String content) {
@@ -52,6 +55,7 @@ public class common_methods {
         }
     }
 
+    // Deleting the file
     public static boolean _delete_file_if_exists(Context context, String filename){
         File file = new File(context.getFilesDir(), filename);
         if(file.exists()){
@@ -60,6 +64,7 @@ public class common_methods {
         return false;
     }
 
+    // Server response error
     public static String _print_server_response_error(VolleyError volleyError){
         String message = null;
         if (volleyError instanceof NetworkError) {
@@ -78,5 +83,25 @@ public class common_methods {
             message = volleyError.toString();
 
         return message;
+    }
+
+    //Clear all the order details after payment
+    public static boolean _clear_order_details(Context context) throws IOException {
+
+        // Delete data from DB of current order_id
+        String order_id = getKey(context, "order_id");
+        DBHelper DB = new DBHelper(context);
+        DB.deleteOrderInfo(order_id);
+
+        if(!_delete_file_if_exists(context, "order_id")){
+            System.err.println("Couldn't delete order_id after payment");
+            return false;
+        }
+        if(!_delete_file_if_exists(context, "tax_percent")){
+            System.err.println("Couldn't delete tax_percent after payment");
+            return false;
+        }
+
+        return true;
     }
 }
