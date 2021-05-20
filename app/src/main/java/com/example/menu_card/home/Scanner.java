@@ -12,17 +12,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
+import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.R;
 
 import org.json.JSONException;
@@ -107,25 +103,11 @@ public class Scanner extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }, volleyError -> {
-                    String message = null;
-                    if (volleyError instanceof NetworkError) {
-                        message = "Cannot connect to Internet. Please check your connection";
-                    } else if (volleyError instanceof ServerError) {
-                        message = "The server could not be found. Please try again after some time";
-                    } else if (volleyError instanceof AuthFailureError) {
-                        message = "Cannot connect to Internet. Please check your connection";
-                    } else if (volleyError instanceof ParseError) {
-                        message = "Parsing error! Please try again after some time";
-                    } else if (volleyError instanceof TimeoutError) {
-                        message = "Connection TimeOut. Please check your internet connection.";
-                    }
-                    new AlertDialog.Builder(Scanner.this)
-                            .setTitle("Couldn't fetch menu")
-                            .setCancelable(true)
-                            .setMessage(message)
-                            .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-                });
+                }, volleyError -> new AlertDialog.Builder(Scanner.this)
+                        .setTitle("Couldn't fetch menu")
+                        .setCancelable(true)
+                        .setMessage(common_methods._print_server_response_error(volleyError))
+                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show());
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
