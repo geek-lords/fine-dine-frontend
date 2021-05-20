@@ -31,6 +31,10 @@ import com.google.zxing.Result;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
 public class Scanner extends AppCompatActivity {
@@ -64,7 +68,7 @@ public class Scanner extends AppCompatActivity {
                         try {
                             rest_info = new JSONObject(result.getText());
                             restaurant_id = rest_info.getString("restaurant_id");
-                            table_no = rest_info.getString("table");
+                            table_no = URLEncoder.encode(rest_info.getString("table"), StandardCharsets.UTF_8.toString());
 
                             getMenu(restaurant_id, result1 -> {
                                 Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
@@ -73,7 +77,7 @@ public class Scanner extends AppCompatActivity {
                                 intent.putExtra("table_no", table_no);
                                 startActivity(intent);
                             });
-                        } catch (JSONException e) {
+                        } catch (JSONException | UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
 
