@@ -343,7 +343,6 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                                 .setMessage("Your order has been successfully placed.")
                                 .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
                         try {
-                            //Toast.makeText(getActivity(), String.valueOf(activity_make_order.summary.length()), Toast.LENGTH_SHORT).show();
                             callback.onSuccess("success");
                         } catch (Exception e) {
                             e.printStackTrace();
