@@ -1,35 +1,28 @@
 package com.example.menu_card.checkout;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
-import com.google.android.material.card.MaterialCardView;
+import com.example.menu_card.home.Activity_homepage;
+import com.example.menu_card.registration.MainActivity;
 import com.google.android.material.textview.MaterialTextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
@@ -45,6 +38,7 @@ public class checkout extends AppCompatActivity {
 
         // Create the card
         LinearLayout linearLayout = findViewById(R.id.linear_bill_summary);
+        Button paytm;
 
         DBHelper DB = new DBHelper(this);
         String order_id;
@@ -144,6 +138,33 @@ public class checkout extends AppCompatActivity {
 
         MaterialTextView total_amount = findViewById(R.id.total_bill_amount);
         total_amount.setText("Rs."+df.format(total_price));
+
+        // Checkout using paytm
+        paytm = findViewById(R.id.paytm);
+
+        paytm.setOnClickListener(v -> {
+            try {
+                if(common_methods._clear_order_details(checkout.this)){
+                    new AlertDialog.Builder(checkout.this)
+                            .setTitle("Payment Successful")
+                            .setCancelable(true)
+                            .setMessage("Payment completed successfully. Please visit again!")
+                            .setPositiveButton("OK", (dialog, which) -> {
+                                dialog.cancel();
+                                Intent intent = new Intent(checkout.this, Activity_homepage.class);
+                                startActivity(intent);
+                                finish();
+                            }).show();
+                }else
+                    new AlertDialog.Builder(checkout.this)
+                            .setTitle("Error")
+                            .setCancelable(true)
+                            .setMessage("Error deleting user details after payment. Check logs.")
+                            .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 
