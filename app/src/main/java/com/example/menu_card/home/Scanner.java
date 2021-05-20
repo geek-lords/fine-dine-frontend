@@ -1,12 +1,6 @@
 package com.example.menu_card.home;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -14,16 +8,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.budiyev.android.codescanner.CodeScanner;
@@ -33,6 +29,7 @@ import com.example.menu_card.R;
 import com.google.zxing.Result;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import static com.example.menu_card.registration.MainActivity.BASE_URL;
 
@@ -60,51 +57,47 @@ public class Scanner extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        // Sample restaurant_id and table no
-                        String restaurant_id = "1";
-                        String table_no = "1";
-                        Toast.makeText(Scanner.this, "Sample data:\nrestaurant_id = 1\ntable_no = 1", Toast.LENGTH_SHORT).show();
+                        // Get the JSON data from the result
+                        JSONObject rest_info;
+                        String restaurant_id, table_no;
 
-                        getMenu(restaurant_id, new VolleyCallback() {
-                            @Override
-                            public void onSuccess(String result) {
+                        try {
+                            rest_info = new JSONObject(result.getText());
+                            restaurant_id = rest_info.getString("restaurant_id");
+                            table_no = rest_info.getString("table");
+
+                            getMenu(restaurant_id, result1 -> {
                                 Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
-                                intent.putExtra("menu", result);
+                                intent.putExtra("menu", result1);
                                 intent.putExtra("restaurant_id", restaurant_id);
                                 intent.putExtra("table_no", table_no);
                                 startActivity(intent);
-                            }
-                        });
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 });
             }
         });
-        scannerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCodeScanner.startPreview();
-            }
-        });
+        scannerView.setOnClickListener(view -> mCodeScanner.startPreview());
 
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            //requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
         }else {
-            //mCodeScanner.startPreview();
+            mCodeScanner.startPreview();
         }
         String restaurant_id = "1";
         String table_no = "1";
         Toast.makeText(Scanner.this, "Sample data:\nrestaurant_id = 1\ntable_no = 1", Toast.LENGTH_SHORT).show();
 
-        getMenu(restaurant_id, new VolleyCallback() {
-            @Override
-            public void onSuccess(String result) {
-                Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
-                intent.putExtra("menu", result);
-                intent.putExtra("restaurant_id", restaurant_id);
-                intent.putExtra("table_no", table_no);
-                startActivity(intent);
-            }
+        getMenu(restaurant_id, result -> {
+            Intent intent = new Intent(Scanner.this, com.example.menu_card.order.activity_make_order.class);
+            intent.putExtra("menu", result);
+            intent.putExtra("restaurant_id", restaurant_id);
+            intent.putExtra("table_no", table_no);
+            startActivity(intent);
         });
     }
 
@@ -115,39 +108,31 @@ public class Scanner extends AppCompatActivity {
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            callback.onSuccess(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                response -> {
+                    try {
+                        callback.onSuccess(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                String message = null;
-                if (volleyError instanceof NetworkError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof ServerError) {
-                    message = "The server could not be found. Please try again after some time";
-                } else if (volleyError instanceof AuthFailureError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof ParseError) {
-                    message = "Parsing error! Please try again after some time";
-                } else if (volleyError instanceof NoConnectionError) {
-                    message = "Cannot connect to Internet. Please check your connection";
-                } else if (volleyError instanceof TimeoutError) {
-                    message = "Connection TimeOut. Please check your internet connection.";
-                }
-                new AlertDialog.Builder(Scanner.this)
-                        .setTitle("Couldn't fetch menu")
-                        .setCancelable(true)
-                        .setMessage(message)
-                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-            }
-        });
+                }, volleyError -> {
+                    String message = null;
+                    if (volleyError instanceof NetworkError) {
+                        message = "Cannot connect to Internet. Please check your connection";
+                    } else if (volleyError instanceof ServerError) {
+                        message = "The server could not be found. Please try again after some time";
+                    } else if (volleyError instanceof AuthFailureError) {
+                        message = "Cannot connect to Internet. Please check your connection";
+                    } else if (volleyError instanceof ParseError) {
+                        message = "Parsing error! Please try again after some time";
+                    } else if (volleyError instanceof TimeoutError) {
+                        message = "Connection TimeOut. Please check your internet connection.";
+                    }
+                    new AlertDialog.Builder(Scanner.this)
+                            .setTitle("Couldn't fetch menu")
+                            .setCancelable(true)
+                            .setMessage(message)
+                            .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
