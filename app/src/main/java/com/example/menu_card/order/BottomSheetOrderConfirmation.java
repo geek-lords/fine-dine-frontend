@@ -151,92 +151,96 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
             total_price.setText("Rs."+total);
         }
 
-        confirm_order_btn.setOnClickListener(v -> {
-            confirm_order_btn.setEnabled(false);
-            progressBar.setVisibility(View.VISIBLE);
-            try {
-                String order_id = getKey(requireActivity(), "order_id");
+        confirm_order_btn.setOnClickListener(v -> new AlertDialog.Builder(requireActivity())
+                .setTitle("Place Order?")
+                .setMessage("Once placed, these food items can't be cancelled.")
+                .setPositiveButton("Place my order", (dialog, which) -> {
+                    confirm_order_btn.setEnabled(false);
+                    progressBar.setVisibility(View.VISIBLE);
+                    try {
+                        String order_id = getKey(requireActivity(), "order_id");
 
-                placeOrder(item_list, result -> {
-                    progressBar.setVisibility(View.INVISIBLE);
+                        placeOrder(item_list, result -> {
+                            progressBar.setVisibility(View.INVISIBLE);
 
-                    for(int i=0; i<activity_make_order.summary.length(); i++){
-                        JSONObject json = activity_make_order.summary.getJSONObject(i);
-                        String item_id = json.getString("item_id");
-                        String name = json.getString("name");
-                        String quantity = json.getString("quantity");
-                        String price = json.getString("price");
+                            for(int i=0; i<activity_make_order.summary.length(); i++){
+                                JSONObject json = activity_make_order.summary.getJSONObject(i);
+                                String item_id = json.getString("item_id");
+                                String name = json.getString("name");
+                                String quantity = json.getString("quantity");
+                                String price = json.getString("price");
 
-                        Cursor cursor = DB.getOrderItem(order_id, item_id);
+                                Cursor cursor = DB.getOrderItem(order_id, item_id);
 
-                        int count = cursor.getCount();
-                        if(count>0){
-                            cursor.moveToFirst();
-                            int quant = Integer.parseInt(cursor.getString(cursor.getColumnIndex("quantity")));
-                            quant += Integer.parseInt(quantity);
+                                int count = cursor.getCount();
+                                if(count>0){
+                                    cursor.moveToFirst();
+                                    int quant = Integer.parseInt(cursor.getString(cursor.getColumnIndex("quantity")));
+                                    quant += Integer.parseInt(quantity);
 
-                            if(!DB.updateOrderInfo(order_id, item_id, name, String.valueOf(quant), price))
-                                Toast.makeText(requireActivity(), "Error updating in local DB", Toast.LENGTH_SHORT).show();
+                                    if(!DB.updateOrderInfo(order_id, item_id, name, String.valueOf(quant), price))
+                                        Toast.makeText(requireActivity(), "Error updating in local DB", Toast.LENGTH_SHORT).show();
 
-                        }else{
-                            DB.insertOrderInfo(order_id, item_id, name, quantity, price);
-                        }
+                                }else{
+                                    DB.insertOrderInfo(order_id, item_id, name, quantity, price);
+                                }
 
-                    }
-
-                    Iterator<Map.Entry<String, String>> it = activity_make_order.hashMap.entrySet().iterator();
-                    LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
-                    while (it.hasNext()) {
-                        Map.Entry<String, String> pair = it.next();
-                        String key = String.valueOf(pair.getKey());
-                        MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
-                        materialTextView.setText("0");
-                        it.remove();
-                    }
-                    activity_make_order.summary = new JSONArray();
-                    confirm_order_btn.setEnabled(true);
-                });
-            } catch (IOException e) {
-                String restaurant_id = requireActivity().getIntent().getStringExtra("restaurant_id");
-                String table_no = requireActivity().getIntent().getStringExtra("table_no");
-
-                getOrderId(restaurant_id, table_no, order_id -> {
-                    saveTextToFile(requireActivity(), "order_id", order_id);
-
-                    placeOrder(item_list, result -> {
-                        for(int i=0; i<activity_make_order.summary.length(); i++){
-                            JSONObject json = activity_make_order.summary.getJSONObject(i);
-                            String item_id = json.getString("item_id");
-                            String name = json.getString("name");
-                            String quantity = json.getString("quantity");
-                            String price = json.getString("price");
-
-                            Cursor cursor = DB.getOrderItem(order_id, item_id);
-                            if(cursor==null || cursor.getCount()<=0){
-                                if(!DB.insertOrderInfo(order_id, item_id, name, quantity, price))
-                                    Toast.makeText(getActivity(),"Error inserting in local DB", Toast.LENGTH_SHORT).show();
-                            }else{
-                               if(!DB.updateOrderInfo(order_id, item_id, name, quantity, price))
-                                    Toast.makeText(getActivity(), "Error updating in local DB", Toast.LENGTH_SHORT).show();
                             }
 
-                        }
-                        Iterator<Map.Entry<String, String>> it = activity_make_order.hashMap.entrySet().iterator();
-                        LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
-                        while (it.hasNext()) {
-                            Map.Entry<String, String> pair = it.next();
-                            String key = String.valueOf(pair.getKey());
-                            MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
-                            materialTextView.setText("0");
-                            it.remove();
-                        }
-                        activity_make_order.summary = new JSONArray();
-                        confirm_order_btn.setEnabled(true);
-                    });
-                });
-            } catch (JSONException e) {e.printStackTrace();}
+                            Iterator<Map.Entry<String, String>> it = activity_make_order.hashMap.entrySet().iterator();
+                            LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
+                            while (it.hasNext()) {
+                                Map.Entry<String, String> pair = it.next();
+                                String key = String.valueOf(pair.getKey());
+                                MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                                materialTextView.setText("0");
+                                it.remove();
+                            }
+                            activity_make_order.summary = new JSONArray();
+                            confirm_order_btn.setEnabled(true);
+                        });
+                    } catch (IOException e) {
+                        String restaurant_id = requireActivity().getIntent().getStringExtra("restaurant_id");
+                        String table_no = requireActivity().getIntent().getStringExtra("table_no");
 
-        });
+                        getOrderId(restaurant_id, table_no, order_id -> {
+                            saveTextToFile(requireActivity(), "order_id", order_id);
+
+                            placeOrder(item_list, result -> {
+                                for(int i=0; i<activity_make_order.summary.length(); i++){
+                                    JSONObject json = activity_make_order.summary.getJSONObject(i);
+                                    String item_id = json.getString("item_id");
+                                    String name = json.getString("name");
+                                    String quantity = json.getString("quantity");
+                                    String price = json.getString("price");
+
+                                    Cursor cursor = DB.getOrderItem(order_id, item_id);
+                                    if(cursor==null || cursor.getCount()<=0){
+                                        if(!DB.insertOrderInfo(order_id, item_id, name, quantity, price))
+                                            Toast.makeText(getActivity(),"Error inserting in local DB", Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        if(!DB.updateOrderInfo(order_id, item_id, name, quantity, price))
+                                            Toast.makeText(getActivity(), "Error updating in local DB", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                                Iterator<Map.Entry<String, String>> it = activity_make_order.hashMap.entrySet().iterator();
+                                LinearLayout linearLayout = requireActivity().findViewById(R.id.linear_layout_menu);
+                                while (it.hasNext()) {
+                                    Map.Entry<String, String> pair = it.next();
+                                    String key = String.valueOf(pair.getKey());
+                                    MaterialTextView materialTextView = linearLayout.findViewWithTag("quantity_"+key);
+                                    materialTextView.setText("0");
+                                    it.remove();
+                                }
+                                activity_make_order.summary = new JSONArray();
+                                confirm_order_btn.setEnabled(true);
+                            });
+                        });
+                    } catch (JSONException e) {e.printStackTrace();}
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
+                .show());
 
         return view;
     }
