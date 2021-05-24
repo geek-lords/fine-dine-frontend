@@ -222,7 +222,9 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                                         if(!DB.insertOrderInfo(order_id, item_id, name, quantity, price))
                                             Toast.makeText(getActivity(),"Error inserting in local DB", Toast.LENGTH_SHORT).show();
                                     }else{
-                                        price = String.valueOf(Integer.parseInt(price)+Integer.parseInt(cursor.getColumnName(cursor.getColumnIndex("price"))));
+                                        int old_price = Integer.parseInt(cursor.getString(cursor.getColumnIndex("price")));
+                                        int new_price = Integer.parseInt(price) + old_price;
+                                        price = String.valueOf(new_price);
                                         if(!DB.updateOrderInfo(order_id, item_id, name, quantity, price))
                                             Toast.makeText(getActivity(), "Error updating in local DB", Toast.LENGTH_SHORT).show();
                                     }
