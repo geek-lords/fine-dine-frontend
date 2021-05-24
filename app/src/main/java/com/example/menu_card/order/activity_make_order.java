@@ -52,6 +52,7 @@ public class activity_make_order extends AppCompatActivity {
     //Creating HashMap for keeping record of the items and their quantity
     static HashMap<String,String> hashMap = new HashMap<>();
     static JSONArray summary;
+    public static String restaurant_name;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
@@ -72,6 +73,9 @@ public class activity_make_order extends AppCompatActivity {
         try {
 
             JSONObject jsonObject = new JSONObject(menu);
+            restaurant_name = jsonObject.getString("restaurant");
+            MaterialTextView restaurant = findViewById(R.id.rest_name);
+            restaurant.setText(restaurant_name);
             JSONArray jsonArray = jsonObject.getJSONArray("menu");
 
             for(int i=0; i<jsonArray.length(); i++){
@@ -304,7 +308,6 @@ public class activity_make_order extends AppCompatActivity {
                         try {
                             String order_id = getKey(activity_make_order.this, "order_id");
                             Cursor cursor = DB.getAllOrderItems(order_id);
-                            Toast.makeText(activity_make_order.this, ""+cursor.getCount(), Toast.LENGTH_LONG).show();
                             if(cursor.getCount()<=0)
                                 Toast.makeText(activity_make_order.this, "Please order some food items first.", Toast.LENGTH_LONG).show();
                             else{

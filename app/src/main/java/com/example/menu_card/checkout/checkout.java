@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +19,7 @@ import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
 import com.example.menu_card.home.Activity_homepage;
+import com.example.menu_card.order.activity_make_order;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.IOException;
@@ -34,6 +34,10 @@ public class checkout extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
+
+        // Set the restaurant name
+        MaterialTextView rest_name = findViewById(R.id.checkout_rest_name);
+        rest_name.setText(activity_make_order.restaurant_name);
 
         // Create the card
         LinearLayout linearLayout = findViewById(R.id.linear_bill_summary);
@@ -122,7 +126,6 @@ public class checkout extends AppCompatActivity {
         float total_tax = (tax_per/100)*total;
         float total_price = total_tax+total;
 
-        Toast.makeText(this, ""+tax_per+"\n"+total_tax+"\n"+total_price, Toast.LENGTH_SHORT).show();
 
         MaterialTextView price_before_tax = findViewById(R.id.price_before_tax);
         price_before_tax.setText("Rs."+total);
