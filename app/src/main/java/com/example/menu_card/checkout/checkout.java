@@ -62,7 +62,6 @@ public class checkout extends AppCompatActivity {
                     String name = cursor.getString(cursor.getColumnIndex("name"));
                     String quantity = cursor.getString(cursor.getColumnIndex("quantity"));
                     String price = cursor.getString(cursor.getColumnIndex("price"));
-                    price = String.valueOf(Integer.parseInt(price)*Integer.parseInt(quantity));
 
                     // Name
                     MaterialTextView item_name = new MaterialTextView(this);
