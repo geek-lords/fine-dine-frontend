@@ -73,6 +73,8 @@ public class fragment_order extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         getRecentOrders(result -> {
+            if(getActivity()==null) return;
+
             progressBar.setVisibility(View.INVISIBLE);
             JSONArray history = new JSONObject(result).getJSONArray("history");
 
