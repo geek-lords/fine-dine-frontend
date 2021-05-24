@@ -46,11 +46,12 @@
            app:layout_constraintTop_toTopOf="parent"
            app:layout_constraintVertical_bias="0.0">
 
-           <com.google.android.material.textview.MaterialTextView
+           <EditText
+               android:id="@+id/account_name"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:textSize="20sp"
-               android:text="John Doe"
+               android:text=""
                android:fontFamily="@font/poppins_medium"
                android:layout_marginTop="50dp"
                android:textColor="@color/black"
@@ -72,12 +73,13 @@
            app:layout_constraintTop_toTopOf="parent"
            app:layout_constraintVertical_bias="0.054">
 
-           <com.google.android.material.textview.MaterialTextView
+           <EditText
+               android:id="@+id/account_email"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_marginStart="100dp"
                android:fontFamily="@font/poppins_medium"
-               android:text="wow@fakeemail.com"
+               android:text=""
                android:textColor="@color/black"
                android:paddingTop="5dp"
                android:textSize="15sp" />
@@ -119,13 +121,15 @@
            app:layout_constraintTop_toTopOf="parent"
            app:layout_constraintVertical_bias="0.0">
 
-           <com.google.android.material.textview.MaterialTextView
+           <com.google.android.material.button.MaterialButton
+               android:id="@+id/update_profile"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_marginStart="100dp"
                android:fontFamily="@font/poppins_medium"
-               android:text="8888888888"
-               android:textColor="@color/black"
+               android:text="Update Profile"
+               android:textColor="@color/white"
+               android:backgroundTint="@color/purple_500"
                android:paddingTop="5dp"
                android:textSize="15sp" />
 
@@ -139,15 +143,7 @@
                app:layout_constraintStart_toStartOf="parent"
                app:layout_constraintTop_toTopOf="parent">
 
-               <com.google.android.material.textview.MaterialTextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:layout_marginStart="10dp"
-                   android:fontFamily="@font/poppins_medium"
-                   android:text="Phone"
-                   android:textColor="@color/purple_200"
-                   android:paddingTop="2dp"
-                   android:textSize="20sp" />
+
 
            </com.google.android.material.card.MaterialCardView>
 
