@@ -20,9 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
 import com.google.android.material.button.MaterialButton;
@@ -53,6 +55,21 @@ public class activity_make_order extends AppCompatActivity {
     static HashMap<String,String> hashMap = new HashMap<>();
     static JSONArray summary;
     public static String restaurant_name;
+
+    @Override
+    public void onBackPressed() {
+        try {
+            getKey(activity_make_order.this, "order_id");
+            new AlertDialog.Builder(activity_make_order.this)
+                    .setTitle("Exit Application?")
+                    .setCancelable(true)
+                    .setMessage("Do you want to exit the app?")
+                    .setNegativeButton("No", (dialog, which) -> dialog.cancel())
+                    .setPositiveButton("Yes", (dialog, which) -> finishAffinity()).show();
+        } catch (IOException ignored) {
+            finish();
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
