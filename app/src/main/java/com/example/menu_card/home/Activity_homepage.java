@@ -5,16 +5,32 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.menu_card.R;
+import com.example.menu_card.order.activity_make_order;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+
+import static com.example.menu_card.Common.common_methods.getKey;
+
 public class Activity_homepage extends AppCompatActivity {
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(Activity_homepage.this)
+                .setTitle("Exit Application?")
+                .setCancelable(true)
+                .setMessage("Do you want to exit the app?")
+                .setNegativeButton("No", (dialog, which) -> dialog.cancel())
+                .setPositiveButton("Yes", (dialog, which) -> finishAffinity()).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
