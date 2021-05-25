@@ -186,6 +186,7 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_medium"
         android:text="Total : "
         android:textColor="@color/black"
@@ -211,10 +212,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/final_confirm_order_btn"
-        android:layout_width="191dp"
-        android:layout_height="63dp"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         android:layout_marginTop="70dp"
-        android:text="ORDER THESE ITEMS"
+        android:text="ORDER"
         android:textColor="@color/white"
         android:textSize="13sp"
         app:backgroundTint="@color/purple_700"

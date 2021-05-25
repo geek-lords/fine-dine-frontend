@@ -67,7 +67,7 @@
         android:id="@+id/main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="35dp"
         android:fontFamily="@font/aquire"
         android:text="FINE DINE"
         android:textColor="@color/white"

@@ -11,7 +11,9 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:elevation="10dp"
+        android:layout_margin="10dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -137,32 +139,34 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/checkout"
-        android:layout_width="156dp"
-        android:layout_height="68dp"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
         android:text="summary"
         android:textColor="@color/white"
         app:backgroundTint="@color/purple_700"
         app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintHorizontal_bias="0.886"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scroll_menu"
         app:layout_constraintVertical_bias="0.343" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/confirm"
-        android:layout_width="164dp"
-        android:layout_height="67dp"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/poppins_semibold"
         android:text="place order"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/purple_700"
+        android:textColor="@color/purple_700"
         app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintHorizontal_bias="0.101"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scroll_menu"
-        app:layout_constraintVertical_bias="0.363" />
+        app:layout_constraintVertical_bias="0.333"
+        app:strokeColor="#4D000000"
+        app:strokeWidth="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@
  <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#A9F9F9FA"
+    android:background="#222222"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -41,10 +41,10 @@
 
     <ImageView
         android:id="@+id/profile"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
+        android:layout_width="90dp"
+        android:layout_height="55dp"
         android:layout_gravity="right"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         app:srcCompat="@drawable/ic_avatar" />
 
     <ImageView
@@ -64,7 +64,7 @@
         android:layout_marginStart="65dp"
         android:fontFamily="@font/aquire"
         android:text="FINE\nDINE"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_anchor="@id/imageView5" />
 

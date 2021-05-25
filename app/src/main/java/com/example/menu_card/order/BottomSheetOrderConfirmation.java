@@ -96,7 +96,6 @@ public class BottomSheetOrderConfirmation extends BottomSheetDialogFragment {
                 MaterialCardView materialCardView = new MaterialCardView(requireActivity());
                 LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.setMargins(dpToPixel(10),dpToPixel(10),dpToPixel(10),dpToPixel(10));
-                materialCardView.setRadius(dpToPixel(10));
                 materialCardView.setLayoutParams(params);
 
                 // Name

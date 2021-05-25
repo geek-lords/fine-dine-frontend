@@ -11,7 +11,9 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:elevation="10dp"
+        android:layout_margin="10dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Order Bill Summary"
+        android:fontFamily="@font/poppins_semibold"
         android:textColor="@color/purple_700"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,10 +44,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardUseCompatPadding="true"
         app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,11 +67,12 @@
 
             </LinearLayout>
         </ScrollView>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat2"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
+        android:layout_width="380dp"
+        android:layout_height="39dp"
         android:layout_margin="10dp"
         android:layout_marginStart="1dp"
         android:orientation="horizontal"
@@ -99,8 +105,8 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
+        android:layout_width="381dp"
+        android:layout_height="39dp"
         android:layout_margin="10dp"
         android:layout_marginStart="1dp"
         android:orientation="horizontal"
@@ -136,7 +142,6 @@
         android:id="@+id/materialCardView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat">
@@ -164,7 +169,7 @@
                     android:layout_gravity="left"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="170dp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:fontFamily="@font/poppins_semibold"
                     android:maxLines="2"
                     android:text="TOTAL"
                     android:textColor="@color/purple_500"
@@ -187,13 +192,13 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/paytm"
-        android:layout_width="120sp"
+        android:layout_width="100sp"
         android:layout_height="60sp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="#00baf2"
+        android:backgroundTint="#3949AB"
         android:fontFamily="@font/poppins_medium"
-        android:text="Paytm"
-        android:textColor="#042e6f"
+        android:text="Pay"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold"
         app:cornerRadius="5dp"
