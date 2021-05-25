@@ -84,13 +84,6 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/home_nav" />
 
-       <Button
-           android:id="@+id/order"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:onClick="order"
-           android:text="Order" />
-
     </com.google.android.material.card.MaterialCardView>
 
 
