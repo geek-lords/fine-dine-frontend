@@ -73,7 +73,7 @@
                     android:hint="Name"
                     android:inputType="textEmailAddress"
                     android:paddingStart="15dp"
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
                     android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -111,7 +111,7 @@
                 android:hint="E-mail"
                 android:inputType="textEmailAddress"
                 android:paddingStart="15dp"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
