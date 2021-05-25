@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.example.menu_card.Common.common_methods._delete_file_if_exists;
 import static com.example.menu_card.Common.common_methods.getKey;
@@ -71,7 +70,7 @@ public class activitySignIn extends AppCompatActivity {
                     isSubmit = false;
                     return;
                 }
-                if (!isEmailValid(email)) {
+                if (!common_methods.isEmailValid(email)) {
                     Toast.makeText(activitySignIn.this, "Email is invalid", Toast.LENGTH_SHORT).show();
                     isSubmit = false;
                     return;
@@ -111,18 +110,6 @@ public class activitySignIn extends AppCompatActivity {
             startActivity(intent);
         });
 
-    }
-
-    public static boolean isEmailValid(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (email == null)
-            return false;
-        return pat.matcher(email).matches();
     }
 
     public void signIn(String email, String password, Scanner.VolleyCallback callback){

@@ -27,7 +27,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.example.menu_card.Common.common_methods._delete_file_if_exists;
 import static com.example.menu_card.Common.common_methods.saveTextToFile;
@@ -66,7 +65,7 @@ public class activitySignUp extends AppCompatActivity {
                     isSubmit = false;
                     return;
                 }
-                if(!isEmailValid(email)){
+                if(!common_methods.isEmailValid(email)){
                     Toast.makeText(activitySignUp.this, "Email is invalid", Toast.LENGTH_SHORT).show();
                     isSubmit = false;
                     return;
@@ -160,18 +159,6 @@ public class activitySignUp extends AppCompatActivity {
             }
         };
         requestQueue.add(jsonObjReq);
-    }
-
-    public static boolean isEmailValid(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (email == null)
-            return false;
-        return pat.matcher(email).matches();
     }
 
 }
