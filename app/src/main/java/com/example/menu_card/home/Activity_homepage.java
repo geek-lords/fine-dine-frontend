@@ -47,13 +47,5 @@ public class Activity_homepage extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomnavview);
         NavController navController = Navigation.findNavController(this,R.id.fragment);
         NavigationUI.setupWithNavController(bottomNavigationView,navController);
-
-        //For Testing purposes
-        ImageView img = findViewById(R.id.profile);
-        img.setOnClickListener(v -> {
-            // Show Profile
-            Toast.makeText(Activity_homepage.this, "Profile", Toast.LENGTH_SHORT).show();
-        });
-
     }
 }
