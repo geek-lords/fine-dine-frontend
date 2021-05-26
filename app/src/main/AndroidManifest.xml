@@ -13,6 +13,7 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,8 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <activity android:name=".home.detailed_recent_order"></activity>
+        <activity android:name=".payment.PaymentActivity"></activity>
         <activity android:name=".checkout.checkout" />
+        <activity android:name=".home.detailed_recent_order"></activity>
         <activity android:name=".home.Scanner" />
         <activity android:name=".order.activity_make_order" />
         <activity android:name=".registration.SplashScreen">
