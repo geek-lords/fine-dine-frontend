@@ -19,9 +19,6 @@ import com.paytm.pgsdk.TransactionManager;
 
 import org.json.JSONException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
