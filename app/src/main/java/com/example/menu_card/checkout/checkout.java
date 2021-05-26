@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.example.menu_card.DB.DBHelper;
 import com.example.menu_card.R;
 import com.example.menu_card.home.Activity_homepage;
 import com.example.menu_card.order.activity_make_order;
+import com.example.menu_card.payment.PaymentActivity;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.IOException;
@@ -28,6 +30,8 @@ import java.text.DecimalFormat;
 import static com.example.menu_card.Common.common_methods.getKey;
 
 public class checkout extends AppCompatActivity {
+
+    private static final int paymentRequest = 1;
 
     @SuppressLint({"RtlHardcoded", "SetTextI18n"})
     @Override
@@ -44,7 +48,7 @@ public class checkout extends AppCompatActivity {
         Button paytm;
 
         DBHelper DB = new DBHelper(this);
-        String order_id;
+        String order_id = null;
         int total = 0;
 
         try {
@@ -143,30 +147,48 @@ public class checkout extends AppCompatActivity {
         // Checkout using paytm
         paytm = findViewById(R.id.paytm);
 
+        String finalOrder_id = order_id;
         paytm.setOnClickListener(v -> {
-            try {
-                if(common_methods._clear_order_details(checkout.this)){
-                    new AlertDialog.Builder(checkout.this)
-                            .setTitle("Payment Successful")
-                            .setCancelable(true)
-                            .setMessage("Payment completed successfully. Please visit again!")
-                            .setPositiveButton("OK", (dialog, which) -> {
-                                dialog.cancel();
-                                Intent intent = new Intent(checkout.this, Activity_homepage.class);
-                                startActivity(intent);
-                                finish();
-                            }).show();
-                }else
-                    new AlertDialog.Builder(checkout.this)
-                            .setTitle("Error")
-                            .setCancelable(true)
-                            .setMessage("Error deleting user details after payment. Check logs.")
-                            .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Intent intent = new Intent(checkout.this, PaymentActivity.class);
+            intent.putExtra("orderID", finalOrder_id);
+            startActivityForResult(intent, paymentRequest);
         });
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==paymentRequest){
+            if (resultCode==RESULT_OK){
+                try {
+                    if(common_methods._clear_order_details(checkout.this)){
+                        new AlertDialog.Builder(checkout.this)
+                                .setTitle("Payment Successful")
+                                .setCancelable(true)
+                                .setMessage("Payment completed successfully. Please visit again!")
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                    dialog.cancel();
+                                    Intent i = new Intent(checkout.this, Activity_homepage.class);
+                                    startActivity(i);
+                                    finish();
+                                }).show();
+                    }else
+                        new AlertDialog.Builder(checkout.this)
+                                .setTitle("Error")
+                                .setCancelable(true)
+                                .setMessage("Error deleting user details after payment. Check logs.")
+                                .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                new AlertDialog.Builder(checkout.this)
+                        .setTitle("Payment failure")
+                        .setCancelable(true)
+                        .setMessage("Payment could not be completed. Please try again!")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.cancel()).show();
+            }
+        }
+    }
 }

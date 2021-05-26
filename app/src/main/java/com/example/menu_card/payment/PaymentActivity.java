@@ -2,7 +2,6 @@ package com.example.menu_card.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -12,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.menu_card.Common.common_methods;
 import com.example.menu_card.R;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
@@ -72,6 +72,8 @@ public class PaymentActivity extends AppCompatActivity {
                             return;
                         }
 
+                        System.out.println(response);
+
                         String amount = response.getString("amount");
                         String callbackUrl = response.getString("callback_url");
                         String merchantID = response.getString("m_id");
@@ -100,23 +102,22 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void startPayment(String amount, String callbackUrl, String merchantID, String token, String txnID) {
-        PaytmOrder paytmOrder = new PaytmOrder(txnID, merchantID, token, amount, "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=" + txnID);
+        PaytmOrder paytmOrder = new PaytmOrder(txnID, merchantID, token, amount, callbackUrl);
+
         TransactionManager transactionManager = new TransactionManager(paytmOrder, new PaytmPaymentTransactionCallback() {
 
             @Override
             public void onTransactionResponse(@Nullable Bundle bundle) {
                 assert bundle != null;
                 updatePaymentStatus();
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Payment Transaction response " + bundle.toString(),
-                        Toast.LENGTH_LONG
-                ).show();
             }
 
             @Override
             public void networkNotAvailable() {
-
+                System.out.println("Network not available");
+                // makes no sense to try to update status when network is not available
+                setResult(RESULT_CANCELED);
+                finish();
             }
 
             @Override
@@ -150,6 +151,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
+        transactionManager.setShowPaymentUrl("https://securegw-stage.paytm.in/theia/api/v1/showPaymentPage");
         transactionManager.startTransaction(this, PAYTM_REQUEST_CODE);
     }
 
@@ -168,11 +170,6 @@ public class PaymentActivity extends AppCompatActivity {
 
         if (requestCode == PAYTM_REQUEST_CODE && data != null) {
             updatePaymentStatus();
-            Toast.makeText(
-                    this,
-                    data.getStringExtra("nativeSdkForMerchantMessage") + data.getStringExtra("response"),
-                    Toast.LENGTH_SHORT
-            ).show();
         }
     }
 
@@ -197,8 +194,11 @@ public class PaymentActivity extends AppCompatActivity {
                             } else {
                                 setResult(RESULT_CANCELED);
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
+                            System.out.println(response);
                             e.printStackTrace();
+                        } finally {
+                            finish();
                         }
                     },
                     volleyError -> {
@@ -221,18 +221,6 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     public String authToken() throws IOException {
-        return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiOTZkNTA4OGMtOWM4Ny00ZGZiLTgyYWMtZDM0M2NiMWE5NTlmIn0.k4jUJtxqynXrMqkusDXw5C9nxvi4oz3O91patR22_8o";
-//        File file = new File(this.getFilesDir(), "jwt");
-//        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-//            StringBuilder sb = new StringBuilder();
-//            String line = br.readLine();
-//
-//            while (line != null) {
-//                sb.append(line);
-//                sb.append("\n");
-//                line = br.readLine();
-//            }
-//            return sb.toString();
-//        }
+        return common_methods.getKey(PaymentActivity.this, "jwt_token");
     }
 }
