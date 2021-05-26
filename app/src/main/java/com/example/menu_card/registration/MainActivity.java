@@ -14,7 +14,6 @@ import com.example.menu_card.home.Activity_homepage;
 public class MainActivity extends AppCompatActivity {
 
     Button button;
-    View image;
     public static String BASE_URL = "https://admin-fine-dine.herokuapp.com/api/v1";
 
     @Override
