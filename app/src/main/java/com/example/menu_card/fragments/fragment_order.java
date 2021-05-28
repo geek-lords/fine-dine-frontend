@@ -133,7 +133,7 @@ public class fragment_order extends Fragment {
 
                 // Display Amount
                 MaterialTextView materialTextView1 = new MaterialTextView(requireActivity());
-                materialTextView1.setText("Rs. "+order.getString("price_excluding_tax"));
+                materialTextView1.setText("Rs. "+order.getString("price"));
                 LinearLayout.LayoutParams params1= new LinearLayout.LayoutParams(dpToPixel(200), ViewGroup.LayoutParams.WRAP_CONTENT);
                 materialTextView1.setTextColor(Color.BLACK);
                 materialTextView1.setGravity(View.TEXT_ALIGNMENT_TEXT_START);

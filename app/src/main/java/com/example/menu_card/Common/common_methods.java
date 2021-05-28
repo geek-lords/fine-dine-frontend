@@ -68,6 +68,7 @@ public class common_methods {
     // Server response error
     public static String _print_server_response_error(VolleyError volleyError){
         String message = null;
+        System.out.println("Error: " + new String(volleyError.networkResponse.data));
         if (volleyError instanceof NetworkError) {
             message = "Cannot connect to Internet. Please check your connection";
         } else if (volleyError instanceof ServerError) {
