@@ -24,9 +24,9 @@ public class common_methods {
     // Saving JWT to system
     public static void saveTextToFile(Context context, String filename, String content) {
         File file = new File(context.getFilesDir(), filename);
-        if(file.exists()){
-            if(!file.delete()){
-                System.err.println("Couldn't delete JWT file:"+filename);
+        if (file.exists()) {
+            if (!file.delete()) {
+                System.err.println("Couldn't delete JWT file:" + filename);
                 throw new RuntimeException();
             }
         }
@@ -57,18 +57,22 @@ public class common_methods {
     }
 
     // Deleting the file
-    public static boolean _delete_file_if_exists(Context context, String filename){
+    public static boolean _delete_file_if_exists(Context context, String filename) {
         File file = new File(context.getFilesDir(), filename);
-        if(file.exists()){
+        if (file.exists()) {
             return file.delete();
         }
         return false;
     }
 
     // Server response error
-    public static String _print_server_response_error(VolleyError volleyError){
+    public static String _print_server_response_error(VolleyError volleyError) {
         String message = null;
-        System.out.println("Error: " + new String(volleyError.networkResponse.data));
+
+        if (volleyError.networkResponse != null) {
+            System.out.println("Error: " + new String(volleyError.networkResponse.data));
+        }
+
         if (volleyError instanceof NetworkError) {
             message = "Cannot connect to Internet. Please check your connection";
         } else if (volleyError instanceof ServerError) {
@@ -81,7 +85,7 @@ public class common_methods {
             message = "Connection TimeOut. Please check your internet connection.";
         }
 
-        if (message==null)
+        if (message == null)
             message = volleyError.toString();
 
         return message;
@@ -95,28 +99,29 @@ public class common_methods {
         DBHelper DB = new DBHelper(context);
         DB.deleteOrderInfo(order_id);
 
-        if(!_delete_file_if_exists(context, "order_id")){
+        if (!_delete_file_if_exists(context, "order_id")) {
             System.err.println("Couldn't delete order_id after payment");
             return false;
         }
-        if(!_delete_file_if_exists(context, "tax_percent")){
+        if (!_delete_file_if_exists(context, "tax_percent")) {
             System.err.println("Couldn't delete tax_percent after payment");
             return false;
         }
-        if(!_delete_file_if_exists(context, "restaurant_id")){
+        if (!_delete_file_if_exists(context, "restaurant_id")) {
             System.err.println("Couldn't delete restaurant_id after payment");
             return false;
         }
-        if(!_delete_file_if_exists(context, "table_no")){
+        if (!_delete_file_if_exists(context, "table_no")) {
             System.err.println("Couldn't delete table_no after payment");
             return false;
         }
 
         return true;
     }
+
     // Check if email is valid
     public static boolean isEmailValid(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";
