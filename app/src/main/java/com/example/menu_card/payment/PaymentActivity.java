@@ -31,6 +31,11 @@ import static com.example.menu_card.registration.MainActivity.BASE_URL;
 public class PaymentActivity extends AppCompatActivity {
     private static final int PAYTM_REQUEST_CODE = 0;
     private static final int PAYMENT_SUCCESSFUL = 0;
+    // Paytm testing API is fucked up. Its sending me 501 for
+    // all payment status queries even if payment succeeded.
+    // So I added this hack to send the payment status here
+    // itself
+    private static final int PAYMENT_FAILED = 3;
 
     RequestQueue requestQueue;
 
@@ -106,7 +111,9 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onTransactionResponse(@Nullable Bundle bundle) {
                 assert bundle != null;
-                updatePaymentStatus();
+                int status = "TXN_SUCCESS".equals(bundle.getString("STATUS"))
+                        ? PAYMENT_SUCCESSFUL : PAYMENT_FAILED;
+                updatePaymentStatus(status);
             }
 
             @Override
@@ -119,32 +126,32 @@ public class PaymentActivity extends AppCompatActivity {
 
             @Override
             public void onErrorProceed(String s) {
-                updatePaymentStatus();
+                updatePaymentStatus(PAYMENT_FAILED);
             }
 
             @Override
             public void clientAuthenticationFailed(String s) {
-                updatePaymentStatus();
+                updatePaymentStatus(PAYMENT_FAILED);
             }
 
             @Override
             public void someUIErrorOccurred(String s) {
-                updatePaymentStatus();
+                updatePaymentStatus(PAYMENT_FAILED);
             }
 
             @Override
             public void onErrorLoadingWebPage(int i, String s, String s1) {
-                updatePaymentStatus();
+                updatePaymentStatus(PAYMENT_FAILED);
             }
 
             @Override
             public void onBackPressedCancelTransaction() {
-                updatePaymentStatus();
+                updatePaymentStatus(PAYMENT_FAILED);
             }
 
             @Override
             public void onTransactionCancel(String s, Bundle bundle) {
-                updatePaymentStatus();
+                updatePaymentStatus(PAYMENT_FAILED);
             }
         });
 
@@ -166,15 +173,15 @@ public class PaymentActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PAYTM_REQUEST_CODE && data != null) {
-            updatePaymentStatus();
+            updatePaymentStatus(PAYMENT_SUCCESSFUL);
         }
     }
 
-    private void updatePaymentStatus() {
+    private void updatePaymentStatus(int status) {
         try {
             requestQueue.add(new JsonObjectRequest(
                     Request.Method.POST,
-                    BASE_URL + "/update_payment_status?txn_id=" + URLEncoder.encode(txnID, StandardCharsets.UTF_8.toString()),
+                    BASE_URL + "/update_payment_status?txn_id=" + URLEncoder.encode(txnID, StandardCharsets.UTF_8.toString()) + "&status=" + status,
                     null,
                     response -> {
                         try {
