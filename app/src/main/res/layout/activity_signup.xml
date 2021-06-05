@@ -140,7 +140,7 @@
         android:id="@+id/sign_in_redirect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:fontFamily="@font/poppins_medium"
         android:text="Already have an account? Login"
         android:textColor="#A7A7A8"
